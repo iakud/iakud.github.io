@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Cocos2d-x通过Jni实现C++与Java相互调用"
-date:   2015-02-09 12:00:01 +0800
+title: "Cocos2d-x通过Jni实现C++与Java相互调用"
+date: 2015-02-09 12:00:01 +0800
 categories: cocos2d
 ---
 
