@@ -6,7 +6,7 @@ categories: 算法
 ---
 
 简单说明Astar算法：
-```c
+```bash
 while (OPEN != NULL) {
 	从OPEN表中取估价值f最小的节点n;
 	if (n节点==目标节点) {
