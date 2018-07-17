@@ -23,8 +23,7 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  iakud
 
 # Build settings
-# markdown: kramdown
-markdown: redcarpet
+markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
@@ -41,5 +40,7 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 
-redcarpet:
-  extensions: ["fenced_code_blocks", "highlight"]
+# redcarpet:
+#   extensions: ["fenced_code_blocks", "highlight"]
+kramdown:
+  input: GFM
