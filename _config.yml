@@ -42,5 +42,6 @@ plugins:
 
 # redcarpet:
 #   extensions: ["fenced_code_blocks", "highlight"]
+highlighter: rouge
 kramdown:
   input: GFM
