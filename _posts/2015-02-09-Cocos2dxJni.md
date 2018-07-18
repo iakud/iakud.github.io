@@ -4,7 +4,6 @@ title: "Cocos2d-x通过Jni实现C++与Java相互调用"
 date: 2015-02-09 12:00:01 +0800
 tags: cocos2d
 ---
-
 在cocos2dx项目中与运营平台(java sdk)对接时使用了JNI。
 <!--more-->
 ###通过C++调用Java

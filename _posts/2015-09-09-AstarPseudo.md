@@ -3,8 +3,8 @@ layout: post
 date: 2015-09-09 12:00:00
 title: "Astar伪代码"
 tags: 算法
+excerpt: ""
 ---
-
 简单说明Astar算法：
 ```bash
 while (OPEN != NULL) {
