@@ -25,7 +25,8 @@ github_username: iakud
 
 # Build settings
 markdown: kramdown
-theme: minima
+#theme: minima
+theme: jekyll-theme-primer
 plugins:
   - jekyll-feed
 
