@@ -40,4 +40,5 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 sass:
-  style: compressed
+  style: :compressed
+highlighter: rouge
