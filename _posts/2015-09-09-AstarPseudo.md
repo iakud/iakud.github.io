@@ -2,7 +2,7 @@
 layout: post
 date: 2015-09-09 12:00:00
 title: "Astar伪代码"
-categories: 算法
+tags: 算法
 ---
 
 简单说明Astar算法：
