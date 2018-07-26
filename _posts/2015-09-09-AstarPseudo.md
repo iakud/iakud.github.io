@@ -5,7 +5,7 @@ title: "Astar伪代码"
 category: algorithm
 excerpt: ""
 ---
-简单说明Astar算法：
+简单说明Astar算法_(伪代码)_：
 ```bash
 while (OPEN != NULL) {
 	从OPEN表中取估价值f最小的节点n;
