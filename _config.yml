@@ -43,4 +43,5 @@ plugins:
 excerpt_separator: <!--more--> # 摘要分隔
 show_excerpts: true # 在主页显示摘要
 kramdown:
+  enable_coderay: true
   coderay_tab_width: 4
