@@ -2,7 +2,7 @@
 layout: post
 title: "C++ Primer 阅读小结"
 date: 2013-07-24 00:49:00 +0800
-tags: c++ summary
+category: c++
 excerpt: ""
 ---
 # 一、变量和基本类型

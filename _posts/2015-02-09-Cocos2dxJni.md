@@ -2,13 +2,14 @@
 layout: post
 title: "Cocos2d-x通过Jni实现C++与Java相互调用"
 date: 2015-02-09 12:00:01 +0800
-tags: cocos2d
+category: [ cocos2d, c++ ]
 ---
-在cocos2dx项目中与运营平台(java sdk)对接时使用了JNI。
+在cocos2dx项目中与运营平台(Java SDK)对接时使用了JNI。
 <!--more-->
-###通过C++调用Java
 
-在JniUtil.h文件中如下实现：
+### 通过C++调用Java
+
+在`JniUtil.h`文件中如下实现：
 ```cpp
 #ifndef _JNIUTIL_H_
 #define _JNIUTIL_H_
@@ -20,7 +21,7 @@ public:
 
 #endif // _JNIUTIL_H_
 ```
-在JniUtil.cpp文件中如下实现：
+在`JniUtil.cpp`文件中如下实现：
 ```cpp
 #include "JniUtil.h"
 
@@ -52,9 +53,9 @@ public class JniUtil {
 	}
 }
 ```
-###通过Java调用C++
+### 通过Java调用C++
 
-在java的JniUtil类中定义一个方法，用于提供给java调用C++：
+在Java的`JniUtil`类中定义一个方法，用于提供给Java调用C++：
 ```java
 package com.platform.test;
 
@@ -62,9 +63,9 @@ public class JniUtil {
 	public static native void onLogin(String result);
 }
 ```
-在JniUtil.cpp文件中如下实现：
+在`JniUtil.cpp`文件中如下实现：
 
-方法名与java类中的包名+方法名，以下划线连接
+方法名与Java类中的包名+方法名，以下划线连接
 ```cpp
 extern "C" {
 	void Java_com_platform_test_JniUtil_onLogin(JNIEnv*  env, jobject thiz, jint jresult) {
