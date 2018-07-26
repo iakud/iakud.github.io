@@ -5,6 +5,7 @@ title: "Astar伪代码"
 category: algorithm
 excerpt: ""
 ---
+
 简单说明Astar算法_(伪代码)_：
 ```bash
 while (OPEN != NULL) {
