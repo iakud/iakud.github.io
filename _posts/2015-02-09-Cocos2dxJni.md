@@ -30,12 +30,14 @@ public:
 
 void JniUtil::login(const char* zoneId, const char* zoneName) {
 	JniMethodInfo minfo;
-	if (JniHelper::getStaticMethodInfo(minfo, "com/platform/test/JniUtil",
-		"login", "(Ljava/lang/String;Ljava/lang/String;)V")) {
+	if (JniHelper::getStaticMethodInfo(minfo,
+		"com/platform/test/JniUtil", "login",
+		"(Ljava/lang/String;Ljava/lang/String;)V")) {
 
 		jstring jzoneId = minfo.env->NewStringUTF(zoneId);
 		jstring jzoneName = minfo.env->NewStringUTF(zoneName);
-		minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID, jzoneId, jzoneName);
+		minfo.env->CallStaticVoidMethod(minfo.classID,
+			minfo.methodID, jzoneId, jzoneName);
 
 		minfo.env->DeleteLocalRef(minfo.classID);
 		minfo.env->DeleteLocalRef(jzoneId);
@@ -68,7 +70,8 @@ public class JniUtil {
 方法名与Java类中的包名+方法名，以下划线连接
 ```cpp
 extern "C" {
-	void Java_com_platform_test_JniUtil_onLogin(JNIEnv*  env, jobject thiz, jint jresult) {
+	void Java_com_platform_test_JniUtil_onLogin(JNIEnv* env,
+		jobject thiz, jint jresult) {
 		const char* result = env->GetStringUTFChars(jresult, NULL);
 		CCLOG("onLogin : %s", result);
 		env->ReleaseStringUTFChars(jresult, result);
