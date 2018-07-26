@@ -4,9 +4,8 @@ layout: page
 <ul class="post-list">
   {%- for post in site.categories[page.category] -%}
     <li>
-      <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
       <a class="post-link" href="{{ post.url | absolute_url }}">
-        {{ post.title }}
+        {{ post.title | escape }}
       </a>
     </li>
   {%- endfor -%}
