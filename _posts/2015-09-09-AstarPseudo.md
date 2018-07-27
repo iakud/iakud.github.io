@@ -1,7 +1,7 @@
 ---
 layout: post
-date: 2015-09-09 12:00:00
 title: "Astar伪代码"
+date: 2015-09-09 12:00:00 +0800
 category: algorithm
 excerpt: ""
 ---
