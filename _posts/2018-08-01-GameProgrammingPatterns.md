@@ -30,3 +30,13 @@ typora-root-url: ..
 - 原型模式（Prototype Pattern）：使用特定原型实例来创建特定种类的对象，并且通过拷贝原型来创建新的对象。
 - 单例模式（Singleton Pattern）：确保一个类只有一个实例，并为其提供一个全局访问入口。
 - 状态模式（State Pattern）：允许一个对象在其内部状态改变时改变自身的行为。对象看起来好像是在修改自身类。
+
+### 三、序列型模式（Sequencing Patterns）
+
+- 双缓冲（Double Buffer）：通过一系列顺序性的操作，使效果能够瞬时和同时的呈现出来。 
+
+- 游戏循环（Game Loop）：实现用户输入和处理器速度在游戏行进时间上的解耦。
+
+- 更新方法（Update Method）：通过对所有对象实例同时进行帧更新来模拟一系列相互独立的游戏对象。
+
+### 四、行为型模式（Behavioral Patterns）
