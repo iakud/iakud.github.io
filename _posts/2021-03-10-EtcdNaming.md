@@ -88,7 +88,7 @@ func main() {
     if err != nil {
         log.Fatalln(err)
     }
-    conn, err := grpc.Dial(etcdResolver.Scheme() + ":///" + service, grpc.WithInsecure(), grpc.WithResolvers(etcdResolver), grpc.WithBalancerName(roundrobin.Name))
+    conn, err := grpc.Dial(etcdResolver.Scheme()+":///"+service, grpc.WithInsecure(), grpc.WithResolvers(etcdResolver), grpc.WithBalancerName(roundrobin.Name))
     if err != nil {
         log.Fatalln(err)
     }
