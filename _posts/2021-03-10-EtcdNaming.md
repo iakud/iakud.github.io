@@ -2,7 +2,7 @@
 layout: post
 title: "Etcd服务发现实现"
 date: 2021-03-10 15:05:11 +0800
-category: frame
+category: program
 typora-root-url: ..
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title: "Go Modules"
 date: 2019-12-04 10:59:04 +0800
-category: go
+category: program
 ---
 
 #### 一、Go Modules介绍

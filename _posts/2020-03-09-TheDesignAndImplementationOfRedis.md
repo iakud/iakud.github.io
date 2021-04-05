@@ -2,7 +2,7 @@
 layout: post
 title: "《Redis设计与实现》重点回顾"
 date: 2020-03-09 16:14:34 +0800
-category: read
+category: note
 ---
 
 《Redis设计与实现》由“数据结构与对象”、“单机数据库的实现”、“多机数据库的实现”、“独立功能的实现”四个部分组成。

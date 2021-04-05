@@ -2,7 +2,7 @@
 layout: post
 title: "《游戏编程模式》阅读小结"
 date: 2018-08-17 16:43:29 +0800
-category: read
+category: note
 typora-root-url: ..
 ---
 

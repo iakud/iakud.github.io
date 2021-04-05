@@ -2,7 +2,7 @@
 layout: post
 title: "Git工作流——Forking"
 date: 2019-01-31 14:59:00 +0800
-category: git
+category: program
 ---
 
 #### 项目维护者初始化正式仓库
