@@ -28,10 +28,12 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 github_username: iakud
 
+minima:
+  skin: dark
+
 # Build settings
 markdown: kramdown
-# theme: minima
-theme: minimal-mistakes-jekyll
+theme: minima
 plugins:
   - jekyll-feed
 
