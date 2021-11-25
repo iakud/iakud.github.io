@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html
+  lang="zh-cn"
+  class="dark"
+><head>
+  <meta charset="utf-8" />
+  
+    <meta http-equiv="content-language" content="zh-cn" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  
+  <title>《C&#43;&#43; Primer》阅读小结 &middot; 凯的BLOG</title>
+    <meta name="title" content="《C&#43;&#43; Primer》阅读小结 &middot; 凯的BLOG" />
+  
+  <meta name="description" content="" />
+  
+  
+  
+  <link rel="canonical" href="https://blog.iakud.com/posts/c&#43;&#43;primer/" />
+  
+  
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/schemes/congo.min.b48d6ba061dc77186a2524fb8aac5ac3823b2679a9299ca60325abbccc9c1764c884715f0ba24b4e2776cb3814df4af1f4c854b87207cd5d4c7a254da9b55751.css"
+    integrity="sha512-tI1roGHcdxhqJST7iqxaw4I7JnmpKZymAyWrvMycF2TIhHFfC6JLTid2yzgU30rx9MhUuHIHzV1MeiVNqbVXUQ=="
+  />
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/compiled/main.min.4076b9cf114dd23cca017f3365e2205a4c9a4b2c0ef4193ccd08883f76e554aa40f674a8f6e77a1b2895be0975ba8e019b0c59996c2eea32e4970ca4d5221653.css"
+    integrity="sha512-QHa5zxFN0jzKAX8zZeIgWkyaSywO9Bk8zQiIP3blVKpA9nSo9ud6GyiVvgl1uo4BmwxZmWwu6jLklwyk1SIWUw=="
+  />
+  
+  
+  
+    <script>
+      function loadPreferredAppearance() {
+        if (localStorage.preferredAppearance === "dark" || (!("preferredAppearance" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+      function setPreferredAppearance(scheme) {
+        if (scheme == "default") {
+          localStorage.removeItem("preferredAppearance");
+        } else {
+          localStorage.preferredAppearance = scheme;
+        }
+        loadPreferredAppearance();
+      }
+      loadPreferredAppearance();
+      window.matchMedia("(prefers-color-scheme: dark)").addListener(loadPreferredAppearance);
+    </script>
+  
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+  
+  
+  
+  
+  
+  
+  
+  <meta property="og:title" content="《C&#43;&#43; Primer》阅读小结" />
+<meta property="og:description" content="一、变量和基本类型 # 　类型是C&#43;&#43;程序设计的基础。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.iakud.com/posts/c&#43;&#43;primer/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2013-07-24T00:49:00+00:00" />
+<meta property="article:modified_time" content="2013-07-24T00:49:00+00:00" />
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="《C&#43;&#43; Primer》阅读小结"/>
+<meta name="twitter:description" content="一、变量和基本类型 # 　类型是C&#43;&#43;程序设计的基础。"/>
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "articleSection": "Posts",
+    "name": "《C\u002b\u002b Primer》阅读小结",
+    "headline": "《C\u002b\u002b Primer》阅读小结",
+    "description": "一、变量和基本类型 # 　类型是C\u002b\u002b程序设计的基础。",
+    "inLanguage": "zh-cn",
+    "author" : {
+      "@type": "Person",
+      "name": "Kai"
+    },
+    "creator" : {
+      "@type": "Person",
+      "name": "Kai"
+    },
+    "copyrightHolder": "Kai",
+    "copyrightYear": "2013",
+    "dateCreated": "2013-07-24T00:49:00\u002b00:00",
+    "datePublished": "2013-07-24T00:49:00\u002b00:00",
+    "dateModified": "2013-07-24T00:49:00\u002b00:00",
+    "url" : "https:\/\/blog.iakud.com\/posts\/c\u002b\u002bprimer\/",
+    "wordCount": "124",
+    "keywords": []
+  }
+  </script>
+
+
+  
+  
+    <meta name="generator" content="Hugo 0.89.4" />
+  
+  
+  <meta name="author" content="Kai" />
+  
+    
+      <link href="mailto:kaikai87111@gmail.com" rel="me" />
+    
+      <link href="https://github.com/iakud" rel="me" />
+    
+  
+  
+  
+
+
+
+
+
+
+  
+  
+  
+  
+
+
+  
+  
+</head>
+<body
+    class="flex flex-col h-screen px-6 m-auto text-lg leading-7 bg-neutral text-neutral-900 sm:px-14 md:px-24 lg:px-32 dark:bg-neutral-800 dark:text-neutral max-w-7xl"
+  ><header
+  class="flex justify-between py-6 font-semibold sm:items-center sm:py-10 text-neutral-800 dark:text-neutral"
+>
+  
+  <div>
+    
+      <a
+        class="hover:underline hover:underline-primary-500 hover:underline-thickness-bold hover:underline-offset-small"
+        rel="me"
+        href="/"
+        >凯的BLOG</a
+      >
+  </div>
+  
+  
+    <nav>
+      <ul class="flex flex-col list-none sm:flex-row">
+        
+          <li class="mb-1 text-right sm:mb-0 sm:mr-7 sm:last:mr-0">
+            <a
+              class="hover:underline hover:underline-primary-500 hover:underline-thickness-bold hover:underline-offset-small"
+              href="/posts/"
+              title="Posts"
+              >Blog</a
+            >
+          </li>
+        
+          <li class="mb-1 text-right sm:mb-0 sm:mr-7 sm:last:mr-0">
+            <a
+              class="hover:underline hover:underline-primary-500 hover:underline-thickness-bold hover:underline-offset-small"
+              href="/categories/"
+              title="Categories"
+              >Categories</a
+            >
+          </li>
+        
+          <li class="mb-1 text-right sm:mb-0 sm:mr-7 sm:last:mr-0">
+            <a
+              class="hover:underline hover:underline-primary-500 hover:underline-thickness-bold hover:underline-offset-small"
+              href="/tags/"
+              title="Tags"
+              >Tags</a
+            >
+          </li>
+        
+      </ul>
+    </nav>
+  
+</header>
+<main class="flex-grow">
+  <article class="max-w-prose">
+    <header>
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-800 dark:text-neutral">
+        《C++ Primer》阅读小结
+      </h1>
+      <div class="mt-8 mb-12 text-base text-neutral-400 dark:text-neutral-500">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+    
+  
+
+  
+    
+  
+
+  
+
+
+  <div class="flex flex-row items-center">
+    
+    
+      <time datetime="2013-07-24 00:49:00 &#43;0000 UTC">24 July 2013</time><span class="px-2 text-primary-500">&middot;</span><span title=""></span>
+    
+
+    
+    
+  </div>
+
+
+      </div>
+    </header>
+    <section class="prose dark:prose-light">
+      <h3 id="一变量和基本类型">一、变量和基本类型 <a class="heading-anchor" href="#%e4%b8%80%e5%8f%98%e9%87%8f%e5%92%8c%e5%9f%ba%e6%9c%ac%e7%b1%bb%e5%9e%8b" aria-label="">#</a></h3>
+<p>　　类型是C++程序设计的基础。</p>
+<p>　　每种类型都定义了其存储空间要求和可以在该类型的所有对象上执行的操作。C++提供了一组基本内置类型，如<code>int</code>、<code>char</code>等。这些类型与它们在机器硬件上的标示方式紧密相关。</p>
+<p>　　类型可以为<code>const</code>或非<code>const</code>；<code>const</code>对象必须要初始化，且其值不能被修改。另外，我们还可以定义复合类型，如引用。引用为对象提供了另一个名字。复合类型是用其他类型定义的类型。</p>
+<p>　　C++语言支持通过定义类来自定义类型。标准库使用类设施来提供一组高级的抽象概念，如IO和<code>string</code>类型。</p>
+<p>　　C++是一种静态类型语言：变量和函数在使用前必须先声明。变量可以声明多次但是只能定义一次。定义变量时就进行初始化几乎总是个好主意。</p>
+<h3 id="二标准库类型">二、标准库类型 <a class="heading-anchor" href="#%e4%ba%8c%e6%a0%87%e5%87%86%e5%ba%93%e7%b1%bb%e5%9e%8b" aria-label="">#</a></h3>
+<p>　　C++标准库定义了几种更高级的抽象数据类型，包括<code>string</code>和<code>vector</code>类型。<code>string</code>类型提供了变长的字符串，而<code>vector</code>类型则可用于管理同一类型的对象集合。</p>
+<p>　　迭代器实现了对存储于容器对象的间接访问。迭代器可以用于访问和遍历<code>string</code>类型和<code>vector</code>类型的元素。</p>
+<h3 id="三数组和指针">三、数组和指针 <a class="heading-anchor" href="#%e4%b8%89%e6%95%b0%e7%bb%84%e5%92%8c%e6%8c%87%e9%92%88" aria-label="">#</a></h3>
+<p>　　数组和指针所提供的功能类似于标准库的<code>vector</code>类与<code>string</code>类和相关的迭代器。我们可以把<code>vector</code>类型理解为更灵活、更容易管理的数组，同样，<code>string</code>是C风格字符串的改进类型，而C风格字符串是以空字符结束的字符数组。</p>
+<p>　　迭代器和指针都能用于间接地访问所指向的对象。<code>vector</code>类型所包含的元素通过迭代器来操纵，类似地，指针则用于访问数组元素。尽管道理都很简单，但在实际应用中，指针的难用是出了名的。</p>
+<p>　　某些低级任务必须使用指针和数组，但由于使用指针和数组容易出错而且难以测试，应尽量避免使用。一般而言，应该优先使用标准库抽象类而少用语言内置的低级数组和指针。尤其是应该使用<code>string</code>类型取代C风格以空字符结束的字符数组。现代C++程序不应使用C风格字符串。</p>
+<h3 id="四表达式">四、表达式 <a class="heading-anchor" href="#%e5%9b%9b%e8%a1%a8%e8%be%be%e5%bc%8f" aria-label="">#</a></h3>
+<p>　　C++提供了丰富的操作符，并定义了用于内置类型值时操作符的含义。除此之外，C++还支持操作符重载，允许由程序员自己来定义用于类类型时操作符的含义。</p>
+<p>　　要理解复合表达式（即含有多个操作符的表达式）就必须先了解优先级、结核性以及操作数的求职次序。每一个操作符都有自己的优先级别和结合性。优先级规定复合表达式中操作符结合的方式，而结合性则决定同一个优先级的操作符如何结合。</p>
+<p>　　大多数操作符没有规定其操作数的求职顺序：由编译器自由选择先计算左操作数还是右操作数。通常，操作数的求职顺序不会影响表达式的结果。但是，如果操作符的两个操作数都与同一个对象相关，而且其中一个操作数改变了该对象的值，则程序将会因此而产生严重的错误——而且这类错误很难发现。</p>
+<p>　　最后，可以使用某种类型编写表达式，而实际需要的是另一类型的值。此时，编译器自动实现类型转换（既可以是内置类型也可以是为类类型而定义的），将特定类型转换为所需的类型。C++还提供了强制类型转换显式地将数值转换为所需的数据类型。</p>
+<h3 id="五语句">五、语句 <a class="heading-anchor" href="#%e4%ba%94%e8%af%ad%e5%8f%a5" aria-label="">#</a></h3>
+<p>C++提供了种类相当有限的语句，其中大多数都会影响程序的控制流：</p>
+<ul>
+<li><code>while</code>、<code>for</code>以及<code>do while</code>语句，实现反复循环；</li>
+<li><code>if</code>和<code>switch</code>，提供条件分支结构；</li>
+<li><code>continue</code>，终止当前循环；</li>
+<li><code>break</code>，退出一个循环或<code>switch</code>语句；</li>
+<li><code>goto</code>，将控制跳转到某个标号语句；</li>
+<li><code>try</code>、<code>catch</code>语句，实现<code>try</code>块的定义，该块语句包含一个可能抛出异常的语句序列，<code>catch</code>子句则用来处理在<code>try</code>块里抛出的异常；</li>
+<li><code>throw</code>表达式，用于退出代码块的执行，将控制转移给相关的<code>catch</code>子句。</li>
+</ul>
+<p>此外，C++还提供表达式语句和声明语句。表达式语句用于求解表达式。</p>
+<h3 id="六函数">六、函数 <a class="heading-anchor" href="#%e5%85%ad%e5%87%bd%e6%95%b0" aria-label="">#</a></h3>
+<p>　　函数是有名字的计算单元，对程序（就算是小程序）的结构化至关重要。函数的定义由返回类型、函数名、形参表（可能为空）以及函数体组成。函数体是调用函数时执行的语句块。在调用函数时，传递给函数的实参必须与相应的形参类型兼容。</p>
+<p>　　给函数传递实参遵循变量初始化的规则。非引用类型的形参以相应实参的副本初始化。对（非引用）形参的任何修改仅作用于局部副本，并不影响实参本身。</p>
+<p>　　复制庞大而复杂的值有昂贵的开销。为了避免传递副本的开销，可将形参指定为引用类型。对引用形参的任何修改会直接影响实参本身。应将不需要修改相应实参的引用形参定义为<code>const</code>引用。</p>
+<p>　　在C++中，函数可以重载：内联函数和成员函数。将函数指定为内联是建议编译器在调用点直接把函数代码展开。内联函数避免了调用函数的代价。成员函数则是身为类型成员的函数。</p>
+<h3 id="七标准io库">七、标准IO库 <a class="heading-anchor" href="#%e4%b8%83%e6%a0%87%e5%87%86io%e5%ba%93" aria-label="">#</a></h3>
+<p>C++使用标准库类处理输入和输出：</p>
+<ul>
+<li><code>iostream</code>类处理面向流的输入和输出。</li>
+<li><code>fstream</code>类处理已命名文件的IO。</li>
+<li><code>stringstream</code>类处理内存中字符串的IO。</li>
+</ul>
+<p>　　所有的这些类都是通过继承相互关联的。输入类继承了<code>istream</code>，而输出类则继承了<code>ostream</code>。因此，可在<code>istream</code>对象上执行的操作同样适用于<code>ifstream</code>或<code>istringstream</code>对象。而继承<code>ostream</code>的输出类也是类似的。</p>
+<p>　　所有IO对象都有一组条件状态，用来指示是否可以通过该对象进行IO操作。如果出现了错误（例如遇到文件结束符）对象的状态将标志无法再进行输入，直到修正了错误为止。标准库提供了一组函数设置和检查这些状态。</p>
+<h3 id="八顺序容器">八、顺序容器 <a class="heading-anchor" href="#%e5%85%ab%e9%a1%ba%e5%ba%8f%e5%ae%b9%e5%99%a8" aria-label="">#</a></h3>
+<p>　　C++标准库定义了一系列顺序容器类型。容器是用于存储某种给定类型对象的模板类型。在顺序容器中，所有元素根据其位置排列和访问。顺序容器共享一组通用的已标准化的接口：如果两种顺序容器都提供某一操作，那么该操作具有相同的接口和含义。所有容器都提供（有效的）动态内存管理。程序员在容器中添加元素时，不必操心元素存放在哪里。容器自己实现其存储管理。</p>
+<p>　　最经常使用的容器类型是<code>vector</code>，它支持对元素的快速随机访问。可高效地在<code>vector</code>容器尾部添加和删除元素，而在其他任何位置上的插入或删除运算则要付出比较昂贵的代价。deque类与<code>vector</code>相似，但它还支持在<code>deque</code>首部的快速插入和删除运算。<code>list</code>类只支持元素的顺序访问，但在list内部任何位置插入和删除元素都非常快速。</p>
+<p>　　容器定义的操作非常少，只定义了构造函数、添加或删除元素的操作、设置容器长度的操作以及返回指向特殊元素的迭代器的操作。</p>
+<p>　　在容器中添加或删除元素可能会使已存在的迭代器失效。当混合使用迭代器操作和容器操作时，必须时刻留意给定的容器操作是否会使迭代器失效。许多使一个迭代器失效的操作，例如<code>insert</code>或<code>erase</code>，将返回一个新的迭代器，让程序员保留容器中的一个位置。使用改变容器长度的容器操作的循环必须非常小心其迭代器的使用。</p>
+<h3 id="九关联容器">九、关联容器 <a class="heading-anchor" href="#%e4%b9%9d%e5%85%b3%e8%81%94%e5%ae%b9%e5%99%a8" aria-label="">#</a></h3>
+<p>　　关联容器的元素按键排序和访问。关联容器支持通过键高效地查找和读取元素。键的使用，使关联容器区别于顺序容器，顺序容器的元素是根据位置访问的。</p>
+<p>　　<code>map</code>和<code>multimap</code>类型存储的元素是键-值对。它们使用在<code>utility</code>头文件中定义的标准库<code>pair</code>类，来表示这些键-值对元素。对<code>map</code>或<code>multimap</code>迭代器进行解引用将获得<code>pair</code>类型的值。<code>pair</code>对象的<code>first</code>成员是一个<code>const</code>键，而<code>second</code>成员则是该键所关联的值。<code>set</code>和<code>multiset</code>类型则专门用于存储键。在<code>map</code>和<code>set</code>类型中，一个键只能关联一个元素。而<code>multimap</code>和<code>multiset</code>类型则允许多个元素拥有相同的键。</p>
+<p>　　关联容器共享了顺序容器的许多操作。除此之外，关联容器还定义了一些新的操作，并对某些顺序容器同样提供的操作重新定义了其含义或返回类型，这些操作的差别体现了关联容器中键的使用。</p>
+<p>　　关联容器的元素可用迭代器访问。标准库保证了迭代器按照键的次序访问元素。<code>begin</code>操作将获得拥有最小键的元素，对此迭代器做自增运算则可以按非降序依次访问各个元素。</p>
+<h3 id="十泛型算法">十、泛型算法 <a class="heading-anchor" href="#%e5%8d%81%e6%b3%9b%e5%9e%8b%e7%ae%97%e6%b3%95" aria-label="">#</a></h3>
+<p>　　C++标准化过程做出了更重要的贡献之一是：创建和扩展了标准库。容器和算法库是标准库的基础。标准库定义了超过一百个算法。幸运的是，这些算法具有相同的结构，是他们更易于学习和使用。</p>
+<p>　　算法与类型无关：它们通常在一个元素序列上操作，这些元素可以存储在标准库容器类型、内置数组甚至是生成的序列（例如读写流程所生成的序列）上。算法基于迭代器操作，从而实现类型无关性。大多数算法使用一对指定元素范围的迭代器作为其头两个参数。其他的迭代器实参包括指定输出目标的输出迭代器，或者用于指定第二个输入序列的另一个或一对迭代器。</p>
+<p>　　迭代器可通过其所支持的操作来分类。标准库定义了五种迭代器类别：输入、输出、前向、双向和随机访问迭代器。如果一个迭代器支持某种迭代器类别要求的运算，则该迭代器属于这个迭代器类别。</p>
+<p>　　正如迭代器根据操作来分类一样，算法的迭代器形参也通过其所要求的迭代器操作来分类。只需要读取其序列的算法通常只要求输入迭代器的操作。而写目标迭代器的算法则通常只要求输出迭代器的操作，依此类推。</p>
+<p>　　查找某个值的算法通常提供第二个版本，用于查找使用谓词函数返回非零值的元素。对于这种算法，第二个版本的函数名字以<code>_if</code>后缀标识。类似地，很多算法提供所谓的复制版本，将（修改过的）元素写到输出序列，而不是写回输入范围。这种版本的名字以<code>_copy</code>结束。</p>
+<p>　　第三种模式是考虑算法是否对元素读、写或者重新排序。算法从不直接改变它所操纵的序列的大小。（如果算法的实参是插入迭代器，则该迭代器会添加新元素，但算法并不直接这么做。）算法可以从一个位置将元素复制到另一个位置，但不能直接添加或删除元素。</p>
+<h3 id="十一类">十一、类 <a class="heading-anchor" href="#%e5%8d%81%e4%b8%80%e7%b1%bb" aria-label="">#</a></h3>
+<p>　　类是C++中最基本的特征，允许定义新的类型以适应应用程序的需要，同时使用程序更短且更易于修改。</p>
+<p>　　数据抽象是指定义数据和函数成员的能力，而封装是指从常规访问中保护类成员的能力，它们都是类的基础。成员函数定义类的接口。通过将类的实现所用到的数据和函数设置为<code>private</code>来封装类。</p>
+<p>　　类可以定义构造函数，它们是特殊的成员函数，控制如何初始化类的对象。可以重载构造函数。每个构造函数应初始化每个数据成员。初始化列表包含的是名-值对，其中的名是一个成员，而值则是该成员的初始值。</p>
+<p>　　类可以将对其非<code>public</code>成员的访问权授予其他类或函数，并通过将其他的类或函数设为友元来授予其访问权。</p>
+<p>　　类也可以定义<code>mutable</code>或者<code>static</code>成员。<code>mutable</code>成员永远都不能为<code>const</code>：它的值可以在<code>const</code>成员函数中修改。<code>static</code>成员可以是函数或数据，独立于类类型的对象而存在。</p>
+<h3 id="十二复制控制">十二、复制控制 <a class="heading-anchor" href="#%e5%8d%81%e4%ba%8c%e5%a4%8d%e5%88%b6%e6%8e%a7%e5%88%b6" aria-label="">#</a></h3>
+<p>　　类除了定义该类型对象上的操作，还需要定义复制、赋值或撤销该类型对象的含义。特殊成员函数（赋值构造函数、赋值操作符和析构函数）可用于定义这些操作。这些操作统称为“复制控制”函数。</p>
+<p>　　如果类没有定义这些操作中的一个或多个，编译器将自动定义它们。合成操作执行逐个成员初始化、赋值或撤销：合成操作依次取得每个成员，根据成员类型进行成员的复制、赋值或撤销。如果成员为类类型的，合成操作调用该类的相应操作（即，复制构造函数调用成员的复制构造函数，析构函数调用成员的析构函数，等等）。如果成员为内置类型或指针，则直接复制或赋值，析构函数对撤销内置类型或指针类型的成员没有影响。如果成员为数组，则根据元素类型以适当方式复制、赋值或撤销数组中的元素。</p>
+<p>　　与复制构造函数和赋值操作符不同，无论类是否定义了自己的析构函数，都会创建和运行合成析构函数。如果类定义了析构函数，则在类定义的析构函数结束之后运行合成析构函数。</p>
+<p>　　定义复制控制函数最为困难的部分通常在于认识到它们的必要性。</p>
+<p>　　分配内存或其他资源的类几乎总是需要定义复制控制成员来管理所分配的资源。如果一个类需要析构函数，则它几乎也总是需要定义复制构造函数和赋值操作符。</p>
+<h3 id="十三重载操作符与转换">十三、重载操作符与转换 <a class="heading-anchor" href="#%e5%8d%81%e4%b8%89%e9%87%8d%e8%bd%bd%e6%93%8d%e4%bd%9c%e7%ac%a6%e4%b8%8e%e8%bd%ac%e6%8d%a2" aria-label="">#</a></h3>
+<p>　　通过定义内置操作符的重载版本，我们可以为自己的类型（即，类类型或枚举类型）的对象定义同样丰富的表达式集合。重载操作符必须具有至少一个类类型或枚举类型的操作数。应用于内置类型时，重载操作符与对应操作符具有同样数目的操作数、同样的结合性和优先级。</p>
+<p>　　大多数重载操作符可以定义为类成员或普通非成员函数，赋值操作符、下标操作符、调用操作符和箭头操作符必须为类成员。操作符定义为成员时，它是普通成员函数。具体而言，成员操作符有一个隐式<code>this</code>指针，该指针一定是第一个操作数，即，一元操作符唯一的操作数，二元操作符的左操作数。</p>
+<p>　　重载了<code>operator()</code>（即，函数调用操作符）的类的对象，称为“函数对象”。这种对象通常用于定义与标准算法结合使用的谓词函数。</p>
+<p>　　类可以定义转换，当一个类型的对象用在需要另一个不同类型对象的地方时，自动应用这些转换。接受单个形参且未指定为<code>explicit</code>的构造函数定义了从其他类型到类类型的转换，重载操作符转换函数则定义了从类类型到其他类型的转换。转换操作符必须为所转换类型的成员，没有形参并且不定义返回值，转换操作符返回操作符所具有类型的值，例如，<code>operator int</code>返回<code>int</code>。</p>
+<p>　　重载操作符和类类型转换都有助于更容易、更自然地使用类型，但是，必须注意避免设计对用户而言不明显的操作符和转换，而且应避免定义一个类型与另一类型之间的多个转换。</p>
+<h3 id="十四面向对象编程">十四、面向对象编程 <a class="heading-anchor" href="#%e5%8d%81%e5%9b%9b%e9%9d%a2%e5%90%91%e5%af%b9%e8%b1%a1%e7%bc%96%e7%a8%8b" aria-label="">#</a></h3>
+<p>　　继承和动态绑定的思想，简单但功能强大。继承使我们能够编写新类，新类与基类共享行为但重定义必要的行为。动态绑定使编译器能够在运行时根据对象的动态类型确定运行函数的哪个版本。继承和动态绑定的结合使我们能够编写具有特定类型行为而又独立于类型的程序。</p>
+<p>　　在C++中，动态绑定仅在通过引用或指针调用时才能应用于声明为虚的函数。C++程序定义继承层次接口的句柄类很常见，这些类分配并管理指向继承层次中对象的指针，因此能够使用户代码在无须处理指针的情况下获得动态行为。</p>
+<p>　　继承对象由基类部分和派生类部分组成。继承对象是通过在处理派生部分之前对对象的基类部分进行构造、复制和赋值，而进行构造、复制和赋值的。因为派生类对象包含基类部分，所以可以将派生类型的引用或指针转换为基类类型的引用或指针。</p>
+<p>　　即使另外不需要析构函数，基类通常也定义一个虚析构函数。如果经常会在指向基类的指针实际指向派生类对象时删除它，析构函数就必须为虚函数。</p>
+<h3 id="十五模板与泛型编程">十五、模板与泛型编程 <a class="heading-anchor" href="#%e5%8d%81%e4%ba%94%e6%a8%a1%e6%9d%bf%e4%b8%8e%e6%b3%9b%e5%9e%8b%e7%bc%96%e7%a8%8b" aria-label="">#</a></h3>
+<p>　　模板是C++语言与众不同的特性，是标准库的基础。模板是独立于类型的蓝图，编译器可以用它产生多种特定类型的实例。我们只需编写一次模板，编译器将为使用模板的不同类型实例化模板。既可以编写函数模板又可以编写类模板。</p>
+<p>　　函数模板是建立算法库的基础，类模板是建立标准库容器和迭代器类型的基础。</p>
+<p>　　编译模板需要编程环境的支持。语言为实例化模板定义了两个主要策略：包含模型和分别编译模型。这些模型规定了模板定义应该放在头文件还是源文件中，就此而言，它们影响着构建系统的方式。现在，所有编译器实现了包含模型，只有一些编译器实现了分别编译模型。编译器的用户指南应该会说明系统怎样管理模板。</p>
+<p>　　显式模板实参使我们能够固定一个或多个模板形参的类型或值。显式实参使我们能够设计无需从对应实参推断模板类型的函数，也使我们能够对实参进行转换。</p>
+<p>　　模板特化是一种特化的定义，它定义了模板的不同版本，将一个或多个形参绑定到特定类型或特定值。对于默认模板定义不适用的类型，特化非常有用。</p>
+<h3 id="十六用于大型程序的工具">十六、用于大型程序的工具 <a class="heading-anchor" href="#%e5%8d%81%e5%85%ad%e7%94%a8%e4%ba%8e%e5%a4%a7%e5%9e%8b%e7%a8%8b%e5%ba%8f%e7%9a%84%e5%b7%a5%e5%85%b7" aria-label="">#</a></h3>
+<p>　　C++的大部分特征都可以应用于范围很广的问题——从几小时便可解决的问题到大团队花几年时间才能解决的问题。其中有一些特征则最适用于大规模问题的情况，这些特征包括异常处理、命名空间、多重继承和虚继承。</p>
+<p>　　通过异常处理我们能够将程序的错误检测部分与错误处理部分分开。在抛出异常的时候，会终止当前正在执行的函数并开始查找最近的<code>catch</code>子句，在查找<code>catch</code>子句的时候，作为异常处理的一部分，将撤销退出函数内部定义的局部变量。这种撤销对象提供了一个重要的编程技术，称为“资源分配即初始化”（RAII）。</p>
+<p>　　命名空间是一种机制，用于管理用独立供应商开发的代码建立的大型复杂应用程序。一个命名空间就是一个作用域，其中可以定义对象、类型、函数、模板和其他命名空间。标准库就定义在名为<code>std</code>的命名空间中。</p>
+<p>　　通过<code>using</code>声明，当前作用域中就都可以访问某个命名空间中的名字了。当然，也可以通过<code>using</code>指示将一个命名空间中的所有名字带入当前作用域，但这种做法很不安全。</p>
+<p>　　从概念上来看，多重继承很简单：派生类可以继承多个直接基类，派生类对象由派生部分和每个基类所贡献的基类部分构成。虽然多重继承概念简单，但细节可能非常复杂，尤其是，继承多个基类引入了新的名字冲突可能性，并且会导致对对象基类部分中的名字的引用出现的二义性。</p>
+<p>　　一个类继承多个直接基类的时候，那些类有可能本身还共享另一个基类。在这种情况下，中间类可以选择使用虚继承，声明愿意与层次中虚继承同一基类的其他类共享虚基类。用这种方法，后代派生类中将只有一个共享虚基类的副本。</p>
+<h3 id="十七特殊工具与技术">十七、特殊工具与技术 <a class="heading-anchor" href="#%e5%8d%81%e4%b8%83%e7%89%b9%e6%ae%8a%e5%b7%a5%e5%85%b7%e4%b8%8e%e6%8a%80%e6%9c%af" aria-label="">#</a></h3>
+<p>　　C++讲述了几个专门针对一些特定问题的特殊设施。</p>
+<p>　　类的自定义内存管理有两种方式：定义自己的内部内存分配，以简化自己的数据成员的分配；定义自己的、类特定的<code>operator new</code>和<code>operator delete</code>函数，在分配类类型的新对象时使用它们。</p>
+<p>　　一些程序需要在运行时直接询问对象的动态类型。运行时类型识别（RTTI）为这类程序设计提供了语言级支持。RTTI只适用于定义了虚函数的类，没有定义虚函数的类型的类型信息是可用的但反映静态类型。</p>
+<p>　　普通对象的指针都是有类型的。定义类成员的指针的时候，指针类型必须也封装指针所指向的类的类型。可以将成员指针绑定到具有相同类型的任意类成员，引用成员指针的时候，必须指定从中获取成员的对象。</p>
+<p>C++还定义了另外几个聚集类型：</p>
+<ul>
+<li>嵌套类，它是在另一个类的作用域中定义的类，这样的类经常定义为其外围类的具体实现类。</li>
+<li>联合，是只能包含简单数据成员的一种特殊类。<code>union</code>类型的对象在任意时刻只能为它的一个数据成员定义值。联合经常嵌套在其他类类型的内部。</li>
+<li>局部类，是局部于函数而定义的非常简单的类。局部类的所有成员必须定义在类定义体中，局部类没有静态数据成员。</li>
+</ul>
+<p>　　C++还支持几种固有的不可移植的特征，包括位域和<code>volatile</code>（它们可使与硬件接口更容易）以及链接指示（它使得与其他语言编写的程序接口更容易）。</p>
+
+    </section>
+    <footer class="pt-8">
+      
+  <div class="flex">
+    
+      <img class="w-24 h-24 !mt-0 !mb-0 mr-4 rounded-full" src="/author.jpg" />
+    
+    <div class="place-self-center">
+      
+        <div class="text-[0.6rem] leading-3 text-neutral-400 dark:text-neutral-500 uppercase">
+          
+        </div>
+        <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+          Kai
+        </div>
+      
+      
+        <div class="text-sm text-neutral-700 dark:text-neutral-400">幸福就像香水，洒给别人也一定会感染自己</div>
+      
+      
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500">
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="mailto:kaikai87111@gmail.com"
+          target="_blank"
+          alt="Email"
+          rel="me noopener noreferrer"
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="at" class="svg-inline--fa fa-at fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C118.941 8 8 118.919 8 256c0 137.059 110.919 248 248 248 48.154 0 95.342-14.14 135.408-40.223 12.005-7.815 14.625-24.288 5.552-35.372l-10.177-12.433c-7.671-9.371-21.179-11.667-31.373-5.129C325.92 429.757 291.314 440 256 440c-101.458 0-184-82.542-184-184S154.542 72 256 72c100.139 0 184 57.619 184 160 0 38.786-21.093 79.742-58.17 83.693-17.349-.454-16.91-12.857-13.476-30.024l23.433-121.11C394.653 149.75 383.308 136 368.225 136h-44.981a13.518 13.518 0 0 0-13.432 11.993l-.01.092c-14.697-17.901-40.448-21.775-59.971-21.775-74.58 0-137.831 62.234-137.831 151.46 0 65.303 36.785 105.87 96 105.87 26.984 0 57.369-15.637 74.991-38.333 9.522 34.104 40.613 34.103 70.71 34.103C462.609 379.41 504 307.798 504 232 504 95.653 394.023 8 256 8zm-21.68 304.43c-22.249 0-36.07-15.623-36.07-40.771 0-44.993 30.779-72.729 58.63-72.729 22.292 0 35.601 15.241 35.601 40.77 0 45.061-33.875 72.73-58.161 72.73z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://github.com/iakud"
+          target="_blank"
+          alt="Github"
+          rel="me noopener noreferrer"
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" class="svg-inline--fa fa-github fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+  </div>
+
+
+    </div>
+  </div>
+
+
+      
+  
+  <section class="flex flex-row flex-wrap justify-center pt-4 text-xl">
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://www.facebook.com/sharer/sharer.php?u=https://blog.iakud.com/posts/c&#43;&#43;primer/&amp;quote=%e3%80%8aC&#43;&#43;%20Primer%e3%80%8b%e9%98%85%e8%af%bb%e5%b0%8f%e7%bb%93"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook" class="svg-inline--fa fa-facebook fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://twitter.com/intent/tweet/?url=https://blog.iakud.com/posts/c&#43;&#43;primer/&amp;text=%e3%80%8aC&#43;&#43;%20Primer%e3%80%8b%e9%98%85%e8%af%bb%e5%b0%8f%e7%bb%93"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" class="svg-inline--fa fa-twitter fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.iakud.com/posts/c&#43;&#43;primer/&amp;description=%e3%80%8aC&#43;&#43;%20Primer%e3%80%8b%e9%98%85%e8%af%bb%e5%b0%8f%e7%bb%93"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="pinterest" class="svg-inline--fa fa-pinterest fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M496 256c0 137-111 248-248 248-25.6 0-50.2-3.9-73.4-11.1 10.1-16.5 25.2-43.5 30.8-65 3-11.6 15.4-59 15.4-59 8.1 15.4 31.7 28.5 56.8 28.5 74.8 0 128.7-68.8 128.7-154.3 0-81.9-66.9-143.2-152.9-143.2-107 0-163.9 71.8-163.9 150.1 0 36.4 19.4 81.7 50.3 96.1 4.7 2.2 7.2 1.2 8.3-3.3.8-3.4 5-20.3 6.9-28.1.6-2.5.3-4.7-1.7-7.1-10.1-12.5-18.3-35.3-18.3-56.6 0-54.7 41.4-107.6 112-107.6 60.9 0 103.6 41.5 103.6 100.9 0 67.1-33.9 113.6-78 113.6-24.3 0-42.6-20.1-36.7-44.8 7-29.5 20.5-61.3 20.5-82.6 0-19-10.2-34.9-31.4-34.9-24.9 0-44.9 25.7-44.9 60.2 0 22 7.4 36.8 7.4 36.8s-24.5 103.8-29 123.2c-5 21.4-3 51.6-.9 71.2C65.4 450.9 0 361.1 0 256 0 119 111 8 248 8s248 111 248 248z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://reddit.com/submit/?url=https://blog.iakud.com/posts/c&#43;&#43;primer/&amp;resubmit=true&amp;title=%e3%80%8aC&#43;&#43;%20Primer%e3%80%8b%e9%98%85%e8%af%bb%e5%b0%8f%e7%bb%93"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="reddit" class="svg-inline--fa fa-reddit fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M201.5 305.5c-13.8 0-24.9-11.1-24.9-24.6 0-13.8 11.1-24.9 24.9-24.9 13.6 0 24.6 11.1 24.6 24.9 0 13.6-11.1 24.6-24.6 24.6zM504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-132.3-41.2c-9.4 0-17.7 3.9-23.8 10-22.4-15.5-52.6-25.5-86.1-26.6l17.4-78.3 55.4 12.5c0 13.6 11.1 24.6 24.6 24.6 13.8 0 24.9-11.3 24.9-24.9s-11.1-24.9-24.9-24.9c-9.7 0-18 5.8-22.1 13.8l-61.2-13.6c-3-.8-6.1 1.4-6.9 4.4l-19.1 86.4c-33.2 1.4-63.1 11.3-85.5 26.8-6.1-6.4-14.7-10.2-24.1-10.2-34.9 0-46.3 46.9-14.4 62.8-1.1 5-1.7 10.2-1.7 15.5 0 52.6 59.2 95.2 132 95.2 73.1 0 132.3-42.6 132.3-95.2 0-5.3-.6-10.8-1.9-15.8 31.3-16 19.8-62.5-14.9-62.5zM302.8 331c-18.2 18.2-76.1 17.9-93.6 0-2.2-2.2-6.1-2.2-8.3 0-2.5 2.5-2.5 6.4 0 8.6 22.8 22.8 87.3 22.8 110.2 0 2.5-2.2 2.5-6.1 0-8.6-2.2-2.2-6.1-2.2-8.3 0zm7.7-75c-13.6 0-24.6 11.1-24.6 24.9 0 13.6 11.1 24.6 24.6 24.6 13.8 0 24.9-11.1 24.9-24.6 0-13.8-11-24.9-24.9-24.9z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://blog.iakud.com/posts/c&#43;&#43;primer/&amp;title=%e3%80%8aC&#43;&#43;%20Primer%e3%80%8b%e9%98%85%e8%af%bb%e5%b0%8f%e7%bb%93"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="linkedin" class="svg-inline--fa fa-linkedin fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="mailto:?body=https://blog.iakud.com/posts/c&#43;&#43;primer/&amp;subject=%e3%80%8aC&#43;&#43;%20Primer%e3%80%8b%e9%98%85%e8%af%bb%e5%b0%8f%e7%bb%93"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="at" class="svg-inline--fa fa-at fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C118.941 8 8 118.919 8 256c0 137.059 110.919 248 248 248 48.154 0 95.342-14.14 135.408-40.223 12.005-7.815 14.625-24.288 5.552-35.372l-10.177-12.433c-7.671-9.371-21.179-11.667-31.373-5.129C325.92 429.757 291.314 440 256 440c-101.458 0-184-82.542-184-184S154.542 72 256 72c100.139 0 184 57.619 184 160 0 38.786-21.093 79.742-58.17 83.693-17.349-.454-16.91-12.857-13.476-30.024l23.433-121.11C394.653 149.75 383.308 136 368.225 136h-44.981a13.518 13.518 0 0 0-13.432 11.993l-.01.092c-14.697-17.901-40.448-21.775-59.971-21.775-74.58 0-137.831 62.234-137.831 151.46 0 65.303 36.785 105.87 96 105.87 26.984 0 57.369-15.637 74.991-38.333 9.522 34.104 40.613 34.103 70.71 34.103C462.609 379.41 504 307.798 504 232 504 95.653 394.023 8 256 8zm-21.68 304.43c-22.249 0-36.07-15.623-36.07-40.771 0-44.993 30.779-72.729 58.63-72.729 22.292 0 35.601 15.241 35.601 40.77 0 45.061-33.875 72.73-58.161 72.73z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+  </section>
+
+
+      
+  
+    <div class="pt-8 article-pagination">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600" />
+      <div class="flex justify-between pt-3">
+        <span>
+          
+            <a class="flex" href="/posts/cocos2djni/">
+              <span class="mr-3 article-pagination-direction">&larr;</span>
+              <span class="flex flex-col">
+                <span class="article-pagination-title mt-[0.1rem] leading-6"
+                  >Cocos2d通过Jni实现C++与Java相互调用</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-400 dark:text-neutral-500">
+                  
+                    <time datetime="2015-02-09 12:00:01 &#43;0000 UTC">9 February 2015</time>
+                  
+                </span>
+              </span>
+            </a>
+          
+        </span>
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+    </footer>
+    
+  </article>
+</main><footer class="py-10">
+  
+  
+  <div class="flex justify-between">
+    <div>
+      
+      <p class="text-sm text-neutral-400 dark:text-neutral-500">
+          &copy;
+          2021
+          Kai
+      </p>
+      
+      
+        <p class="text-xs text-neutral-300 dark:text-neutral-600">
+          
+          
+          
+        </p>
+      
+    </div>
+    
+    
+      <div class="text-sm cursor-pointer text-neutral-400 dark:text-neutral-500">
+        <button
+          id="dark-toggle"
+          onclick="setPreferredAppearance('dark');"
+          oncontextmenu="setPreferredAppearance('default'); return false;"
+          class="inline px-2 py-1 border rounded-md border-neutral-200 dark:hidden hover:text-primary-500 hover:border-primary-400"
+          title=""
+        >
+          
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="moon" class="svg-inline--fa fa-moon fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"></path></svg>
+  </span>
+
+
+        </button>
+        <button
+          id="light-toggle"
+          onclick="setPreferredAppearance('light');"
+          oncontextmenu="setPreferredAppearance('default'); return false;"
+          class="hidden px-2 py-1 border rounded-md cursor-pointer dark:inline border-neutral-700 hover:text-primary-400 hover:border-primary-500"
+          title=""
+        >
+          
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sun" class="svg-inline--fa fa-sun fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"></path></svg>
+  </span>
+
+
+        </button>
+      </div>
+    
+  </div>
+  
+  
+</footer>
+</body>
+</html>

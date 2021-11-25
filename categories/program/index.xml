@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>program on 凯的BLOG</title>
+    <link>https://blog.iakud.com/categories/program/</link>
+    <description>Recent content in program on 凯的BLOG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 18 Nov 2021 14:38:00 +0000</lastBuildDate><atom:link href="https://blog.iakud.com/categories/program/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>confd&#43;etcd实现nginx配置管理</title>
+      <link>https://blog.iakud.com/posts/confd/</link>
+      <pubDate>Thu, 18 Nov 2021 14:38:00 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/confd/</guid>
+      <description>&lt;p&gt;&lt;code&gt;confd&lt;/code&gt;是一个轻量级的配置管理工具，可以通过查询后端存储系统来实现第三方系统的动态配置管理，如&lt;code&gt;Nginx&lt;/code&gt;、&lt;code&gt;Tomcat&lt;/code&gt;、&lt;code&gt;HAproxy&lt;/code&gt;、&lt;code&gt;Docker&lt;/code&gt;配置等。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;confd&lt;/code&gt;能够查询和监听后端系统的数据变更，结合配置模版引擎动态更新本地配置文件，保持和后端系统的数据一致，并且能够执行命令或者脚本实现系统的&lt;code&gt;reload&lt;/code&gt;或者重启。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>LuaJIT和Sublime Text配置</title>
+      <link>https://blog.iakud.com/posts/luajit/</link>
+      <pubDate>Wed, 14 Apr 2021 18:34:31 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/luajit/</guid>
+      <description>&lt;p&gt;简单介绍LuaJIT和Sublime Text开发环境的配置。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Etcd服务发现实现</title>
+      <link>https://blog.iakud.com/posts/etcdnaming/</link>
+      <pubDate>Wed, 10 Mar 2021 15:05:11 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/etcdnaming/</guid>
+      <description>&lt;p&gt;本文介绍&lt;code&gt;gRPC&lt;/code&gt;接入&lt;code&gt;etcd&lt;/code&gt;，实现服务注册与服务发现。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Etcd用户和权限设置</title>
+      <link>https://blog.iakud.com/posts/etcduser/</link>
+      <pubDate>Fri, 29 Jan 2021 16:08:07 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/etcduser/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;创建root用户&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;etcdctl --user root user add root
+etcdctl --user root user grant-role root root
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;添加root用户的时候会要求指定密码&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go Modules</title>
+      <link>https://blog.iakud.com/posts/gomodules/</link>
+      <pubDate>Wed, 04 Dec 2019 10:59:04 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/gomodules/</guid>
+      <description>&lt;h4 id=&#34;一go-modules介绍&#34;&gt;一、Go Modules介绍 &lt;a class=&#34;heading-anchor&#34; href=&#34;#%e4%b8%80go-modules%e4%bb%8b%e7%bb%8d&#34; aria-label=&#34;&#34;&gt;#&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;go modules是golang1.11新加的特性。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;官方定义：modules是相关Go包的集合。modules是源代码交换和版本控制的单元。go命令直接支持使用modules，包括记录和解析对其他模块的依赖性。modules替换旧的基于GOPATH的方法来指定在给定构建中使用哪些源文件。&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Git工作流——Forking</title>
+      <link>https://blog.iakud.com/posts/gitforkingworkflow/</link>
+      <pubDate>Thu, 31 Jan 2019 14:59:00 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/gitforkingworkflow/</guid>
+      <description>&lt;h4 id=&#34;项目维护者初始化正式仓库&#34;&gt;项目维护者初始化正式仓库 &lt;a class=&#34;heading-anchor&#34; href=&#34;#%e9%a1%b9%e7%9b%ae%e7%bb%b4%e6%8a%a4%e8%80%85%e5%88%9d%e5%a7%8b%e5%8c%96%e6%ad%a3%e5%bc%8f%e4%bb%93%e5%ba%93&#34; aria-label=&#34;&#34;&gt;#&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;和任何使用&lt;code&gt;Git&lt;/code&gt;项目一样，第一步是创建在服务器上一个正式仓库，让所有团队成员都可以访问到。通常这个仓库也会作为项目维护者的公开仓库。&lt;/p&gt;
+&lt;p&gt;公开仓库应该是裸仓库，不管是不是正式代码库。所以项目维护者会运行像下面的命令来搭建正式仓库：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git init --bare /path/to/repo.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果有现存的代码库，维护者也要&lt;code&gt;push&lt;/code&gt;到这个仓库中。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Astar伪代码</title>
+      <link>https://blog.iakud.com/posts/astarpseudo/</link>
+      <pubDate>Wed, 09 Sep 2015 12:00:00 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/astarpseudo/</guid>
+      <description>简单说明Astar算法_(伪代码)_：</description>
+    </item>
+    
+    <item>
+      <title>旋转矩形碰撞检测 OBB方向包围盒算法</title>
+      <link>https://blog.iakud.com/posts/obb/</link>
+      <pubDate>Fri, 17 Apr 2015 12:00:00 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/obb/</guid>
+      <description>&lt;p&gt;　　在Cocos2dx中进行矩形的碰撞检测时需要对旋转过的矩形做碰撞检查，由于游戏没有使用Box2D等物理引擎，所以采用了OBB(Oriented bounding box)方向包围盒算法，这个算法是基于SAT(Separating Axis Theorem)分离轴定律的。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Cocos2d通过Jni实现C&#43;&#43;与Java相互调用</title>
+      <link>https://blog.iakud.com/posts/cocos2djni/</link>
+      <pubDate>Mon, 09 Feb 2015 12:00:01 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/cocos2djni/</guid>
+      <description>&lt;p&gt;在Cocos2d项目中与运营平台(Java SDK)对接时使用了JNI。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

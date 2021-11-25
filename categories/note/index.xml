@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>note on 凯的BLOG</title>
+    <link>https://blog.iakud.com/categories/note/</link>
+    <description>Recent content in note on 凯的BLOG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 23 Jun 2021 10:59:00 +0000</lastBuildDate><atom:link href="https://blog.iakud.com/categories/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux进程状态</title>
+      <link>https://blog.iakud.com/posts/processstate/</link>
+      <pubDate>Wed, 23 Jun 2021 10:59:00 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/processstate/</guid>
+      <description>状态 说明     D uninterruptible sleep (usually IO)   R running or runnable (on run queue)   S interruptible sleep (waiting for an event to complete)   T stopped by job control signal   t stopped by debugger during the tracing   W paging (not valid since the 2.</description>
+    </item>
+    
+    <item>
+      <title>《SRE Google运维解密》阅读</title>
+      <link>https://blog.iakud.com/posts/sre/</link>
+      <pubDate>Thu, 01 Apr 2021 20:49:22 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/sre/</guid>
+      <description>&lt;p&gt;Google工程师在提高系统部署规模、改进可靠性和资源利用率方面的指导思想与具体实践——这些都是可以立即直接应用的宝贵经验。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>《Redis设计与实现》重点回顾</title>
+      <link>https://blog.iakud.com/posts/thedesignandimplementationofredis/</link>
+      <pubDate>Mon, 09 Mar 2020 16:14:34 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/thedesignandimplementationofredis/</guid>
+      <description>&lt;p&gt;《Redis设计与实现》由“数据结构与对象”、“单机数据库的实现”、“多机数据库的实现”、“独立功能的实现”四个部分组成。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>《游戏编程模式》阅读小结</title>
+      <link>https://blog.iakud.com/posts/gameprogrammingpatterns/</link>
+      <pubDate>Fri, 17 Aug 2018 16:43:29 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/gameprogrammingpatterns/</guid>
+      <description>&lt;p&gt;　　多数游戏程序员所面临的最大挑战就是完成他们的游戏。许多游戏止步于其高度复杂的代码库面前，而最终没能问世。游戏编程设计模式正是为解决此问题而生。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://blog.iakud.com/images/GameProgrammingPatterns.jpg&#34; alt=&#34;GameProgrammingPatterns&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>《C&#43;&#43; Primer》阅读小结</title>
+      <link>https://blog.iakud.com/posts/c&#43;&#43;primer/</link>
+      <pubDate>Wed, 24 Jul 2013 00:49:00 +0000</pubDate>
+      
+      <guid>https://blog.iakud.com/posts/c&#43;&#43;primer/</guid>
+      <description>一、变量和基本类型 # 　类型是C++程序设计的基础。</description>
+    </item>
+    
+  </channel>
+</rss>

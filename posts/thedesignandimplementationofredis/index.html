@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html
+  lang="zh-cn"
+  class="dark"
+><head>
+  <meta charset="utf-8" />
+  
+    <meta http-equiv="content-language" content="zh-cn" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  
+  <title>《Redis设计与实现》重点回顾 &middot; 凯的BLOG</title>
+    <meta name="title" content="《Redis设计与实现》重点回顾 &middot; 凯的BLOG" />
+  
+  <meta name="description" content="" />
+  
+  
+  
+  <link rel="canonical" href="https://blog.iakud.com/posts/thedesignandimplementationofredis/" />
+  
+  
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/schemes/congo.min.b48d6ba061dc77186a2524fb8aac5ac3823b2679a9299ca60325abbccc9c1764c884715f0ba24b4e2776cb3814df4af1f4c854b87207cd5d4c7a254da9b55751.css"
+    integrity="sha512-tI1roGHcdxhqJST7iqxaw4I7JnmpKZymAyWrvMycF2TIhHFfC6JLTid2yzgU30rx9MhUuHIHzV1MeiVNqbVXUQ=="
+  />
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/compiled/main.min.4076b9cf114dd23cca017f3365e2205a4c9a4b2c0ef4193ccd08883f76e554aa40f674a8f6e77a1b2895be0975ba8e019b0c59996c2eea32e4970ca4d5221653.css"
+    integrity="sha512-QHa5zxFN0jzKAX8zZeIgWkyaSywO9Bk8zQiIP3blVKpA9nSo9ud6GyiVvgl1uo4BmwxZmWwu6jLklwyk1SIWUw=="
+  />
+  
+  
+  
+    <script>
+      function loadPreferredAppearance() {
+        if (localStorage.preferredAppearance === "dark" || (!("preferredAppearance" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+      function setPreferredAppearance(scheme) {
+        if (scheme == "default") {
+          localStorage.removeItem("preferredAppearance");
+        } else {
+          localStorage.preferredAppearance = scheme;
+        }
+        loadPreferredAppearance();
+      }
+      loadPreferredAppearance();
+      window.matchMedia("(prefers-color-scheme: dark)").addListener(loadPreferredAppearance);
+    </script>
+  
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+  
+  
+  
+  
+  
+  
+  
+  <meta property="og:title" content="《Redis设计与实现》重点回顾" />
+<meta property="og:description" content="《Redis设计与实现》由“数据结构与对象”、“单机数据库的实现”、“多机数据库的实现”、“独立功能的实现”四个部分组成。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.iakud.com/posts/thedesignandimplementationofredis/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-03-09T16:14:34+00:00" />
+<meta property="article:modified_time" content="2020-03-09T16:14:34+00:00" />
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="《Redis设计与实现》重点回顾"/>
+<meta name="twitter:description" content="《Redis设计与实现》由“数据结构与对象”、“单机数据库的实现”、“多机数据库的实现”、“独立功能的实现”四个部分组成。"/>
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "articleSection": "Posts",
+    "name": "《Redis设计与实现》重点回顾",
+    "headline": "《Redis设计与实现》重点回顾",
+    "description": "\u003cp\u003e《Redis设计与实现》由“数据结构与对象”、“单机数据库的实现”、“多机数据库的实现”、“独立功能的实现”四个部分组成。\u003c\/p\u003e",
+    "inLanguage": "zh-cn",
+    "author" : {
+      "@type": "Person",
+      "name": "Kai"
+    },
+    "creator" : {
+      "@type": "Person",
+      "name": "Kai"
+    },
+    "copyrightHolder": "Kai",
+    "copyrightYear": "2020",
+    "dateCreated": "2020-03-09T16:14:34\u002b00:00",
+    "datePublished": "2020-03-09T16:14:34\u002b00:00",
+    "dateModified": "2020-03-09T16:14:34\u002b00:00",
+    "url" : "https:\/\/blog.iakud.com\/posts\/thedesignandimplementationofredis\/",
+    "wordCount": "220",
+    "keywords": []
+  }
+  </script>
+
+
+  
+  
+    <meta name="generator" content="Hugo 0.89.4" />
+  
+  
+  <meta name="author" content="Kai" />
+  
+    
+      <link href="mailto:kaikai87111@gmail.com" rel="me" />
+    
+      <link href="https://github.com/iakud" rel="me" />
+    
+  
+  
+  
+
+
+
+
+
+
+  
+  
+  
+  
+
+
+  
+  
+</head>
+<body
+    class="flex flex-col h-screen px-6 m-auto text-lg leading-7 bg-neutral text-neutral-900 sm:px-14 md:px-24 lg:px-32 dark:bg-neutral-800 dark:text-neutral max-w-7xl"
+  ><header
+  class="flex justify-between py-6 font-semibold sm:items-center sm:py-10 text-neutral-800 dark:text-neutral"
+>
+  
+  <div>
+    
+      <a
+        class="hover:underline hover:underline-primary-500 hover:underline-thickness-bold hover:underline-offset-small"
+        rel="me"
+        href="/"
+        >凯的BLOG</a
+      >
+  </div>
+  
+  
+    <nav>
+      <ul class="flex flex-col list-none sm:flex-row">
+        
+          <li class="mb-1 text-right sm:mb-0 sm:mr-7 sm:last:mr-0">
+            <a
+              class="hover:underline hover:underline-primary-500 hover:underline-thickness-bold hover:underline-offset-small"
+              href="/posts/"
+              title="Posts"
+              >Blog</a
+            >
+          </li>
+        
+          <li class="mb-1 text-right sm:mb-0 sm:mr-7 sm:last:mr-0">
+            <a
+              class="hover:underline hover:underline-primary-500 hover:underline-thickness-bold hover:underline-offset-small"
+              href="/categories/"
+              title="Categories"
+              >Categories</a
+            >
+          </li>
+        
+          <li class="mb-1 text-right sm:mb-0 sm:mr-7 sm:last:mr-0">
+            <a
+              class="hover:underline hover:underline-primary-500 hover:underline-thickness-bold hover:underline-offset-small"
+              href="/tags/"
+              title="Tags"
+              >Tags</a
+            >
+          </li>
+        
+      </ul>
+    </nav>
+  
+</header>
+<main class="flex-grow">
+  <article class="max-w-prose">
+    <header>
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-800 dark:text-neutral">
+        《Redis设计与实现》重点回顾
+      </h1>
+      <div class="mt-8 mb-12 text-base text-neutral-400 dark:text-neutral-500">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+    
+  
+
+  
+    
+  
+
+  
+
+
+  <div class="flex flex-row items-center">
+    
+    
+      <time datetime="2020-03-09 16:14:34 &#43;0000 UTC">9 March 2020</time><span class="px-2 text-primary-500">&middot;</span><span title=""></span>
+    
+
+    
+    
+  </div>
+
+
+      </div>
+    </header>
+    <section class="prose dark:prose-light">
+      <p>《Redis设计与实现》由“数据结构与对象”、“单机数据库的实现”、“多机数据库的实现”、“独立功能的实现”四个部分组成。</p>
+<h3 id="一数据结构与对象">一、数据结构与对象 <a class="heading-anchor" href="#%e4%b8%80%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e4%b8%8e%e5%af%b9%e8%b1%a1" aria-label="">#</a></h3>
+<h4 id="1简单动态字符串">1、简单动态字符串 <a class="heading-anchor" href="#1%e7%ae%80%e5%8d%95%e5%8a%a8%e6%80%81%e5%ad%97%e7%ac%a6%e4%b8%b2" aria-label="">#</a></h4>
+<ul>
+<li>Redis只会使用C字符串作为字面量，在大多数情况下，Redis使用<code>SDS</code>（Simple Dynamic String，简单动态字符串）作为字符串表示。</li>
+<li>比起C字符串，<code>SDS</code>具有以下有点：
+<ol>
+<li>常数复杂度获取字符串长度。</li>
+<li>杜绝缓冲区溢出。</li>
+<li>减少修改字符串长度时所需的内存重分配次数。</li>
+<li>二进制安全。</li>
+<li>兼容部分C字符串函数。</li>
+</ol>
+</li>
+</ul>
+<h4 id="2链表">2、链表 <a class="heading-anchor" href="#2%e9%93%be%e8%a1%a8" aria-label="">#</a></h4>
+<ul>
+<li>链表被广泛用于实现Redis的各种功能，比如列表键、发布与订阅、慢查询、监视器等。</li>
+<li>每个链表节点由一个<code>listNode</code>结构来表示，每个节点都有一个指向前置节点和后置节点的指针，所以Redis的链表实现是双端链表。</li>
+<li>每个链表使用一个<code>list</code>结构来表示，这个结构带有表头节点指针、表尾节点指针，以及链表长度等信息。</li>
+<li>因为链表表头节点的前置节点和表尾节点的后置节点都指向<code>NULL</code>，所以Redis的链表实现是无环链表。</li>
+<li>通过为链表设置不同的类型特定函数，Redis的链表可以用于保存各种不同类型的值。</li>
+</ul>
+<h4 id="3字典">3、字典 <a class="heading-anchor" href="#3%e5%ad%97%e5%85%b8" aria-label="">#</a></h4>
+<ul>
+<li>字典被广泛用于实现Redis的各种功能，其中包括数据库的哈希键。</li>
+<li>Redis中的字典使用哈希表作为底层实现，每个字典带有两个哈希表，一个平时使用，另一个仅在进行<code>rehash</code>时使用。</li>
+<li>当字典被用作数据库的底层实现，或者哈希键的底层实现时，Redis使用<code>MurmurHash2</code>算法来计算键的哈希值。</li>
+<li>哈希表使用链地址法来解决键冲突，被分配到同一个索引上的多个键值对会连接成一个单向链表。</li>
+<li>在对哈希表进行扩展或者收缩操作时，程序需要将现有哈希表包含的所有键值对<code>rehash</code>到新哈希表里面，并且这个<code>rehash</code>过程并不是一次性地完成的，而是渐进式地完成的。</li>
+</ul>
+<h4 id="4跳跃表">4、跳跃表 <a class="heading-anchor" href="#4%e8%b7%b3%e8%b7%83%e8%a1%a8" aria-label="">#</a></h4>
+<ul>
+<li>跳跃表是有序集合的底层实现之一。</li>
+<li>Redis的跳跃表实现由<code>zskiplist</code>和<code>zskiplistNode</code>两个结构组成，其中<code>zskiplist</code>用于保存跳跃表信息（比如表头节点、表尾节点、长度），而<code>zskiplistNode</code>则用于表示跳跃表节点。</li>
+<li>每个跳跃表节点的层高都是1至32之间的随机数。</li>
+<li>在同一个跳跃表中，多个节点可以包含相同的分值，但每个节点的成员对象必须是唯一的。</li>
+<li>跳跃表中的节点按照分值大小进行排序，当分值相同时，节点按照成员对象的大小进行排序。</li>
+</ul>
+<h4 id="5整数集合">5、整数集合 <a class="heading-anchor" href="#5%e6%95%b4%e6%95%b0%e9%9b%86%e5%90%88" aria-label="">#</a></h4>
+<ul>
+<li>整数集合是集合键的底层实现之一。</li>
+<li>整数集合的底层实现为数组，这个数组以有序、无重复的方式保存集合元素，在有需要时，程序会根据新添加元素的类型，改变这个数组的类型。</li>
+<li>升级操作为整数集合带来了操作上的灵活性，并且尽可能地节约了内存。</li>
+<li>整数集合只支持升级操作，不支持降级操作。</li>
+</ul>
+<h4 id="6压缩列表">6、压缩列表 <a class="heading-anchor" href="#6%e5%8e%8b%e7%bc%a9%e5%88%97%e8%a1%a8" aria-label="">#</a></h4>
+<ul>
+<li>压缩列表是一种为节约内存而开发的顺序型数据结构。</li>
+<li>压缩列表被用作列表键和哈希键的底层实现之一。</li>
+<li>压缩列表可以包含多个节点，每个节点可以保存一个字节数组或者整数值。</li>
+<li>添加新节点到压缩列表，或者从压缩列表中删除节点，可能会引发连锁更新操作，但这种操作出现的几率并不高。</li>
+</ul>
+<h4 id="7对象">7、对象 <a class="heading-anchor" href="#7%e5%af%b9%e8%b1%a1" aria-label="">#</a></h4>
+<ul>
+<li>Redis数据库中的每个键值对的键和值都是一个对象。</li>
+<li>Redis共有字符串、列表、哈希、集合、有序集合五种类型的对象，每种类型的对象至少都有两种或以上的编码方式，不同的编码可以在不同的使用场景上优化对象的使用效率。</li>
+<li>服务器在执行某些命令之前，会先检查给定键的类型能否执行指定的命令，而检查一个键的类型就是检查键的值对象的类型。</li>
+<li>Redis的对象系统带有引用计数实现的内存回收机制，当一个对象不再被使用时，该对象所占用的内存就会被自动释放。</li>
+<li>Redis会共享值为0到9999的字符串对象。</li>
+<li>对象会记录自己的最后一次被访问的时间，这个时间可以用于计算对象的空转时间。</li>
+</ul>
+<h3 id="二单机数据库的实现">二、单机数据库的实现 <a class="heading-anchor" href="#%e4%ba%8c%e5%8d%95%e6%9c%ba%e6%95%b0%e6%8d%ae%e5%ba%93%e7%9a%84%e5%ae%9e%e7%8e%b0" aria-label="">#</a></h3>
+<h4 id="1数据库">1、数据库 <a class="heading-anchor" href="#1%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="">#</a></h4>
+<ul>
+<li>Redis服务器的所有数据库都保存在<code>redisServer.db</code>数组中，而数据库的数量则由<code>redisServer.dbnum</code>属性保存。</li>
+<li>客户端通过修改目标数据库指针，让它指向<code>redisServer.db</code>数组中的不同元素来切换不同的数据库。</li>
+<li>数据库主要由<code>dict</code>和<code>expires</code>两个字典构成，其中<code>dict</code>字典负责保存键值对，而<code>expires</code>字典则负责保存键的过期时间。</li>
+<li>因为数据库由字典构成，所以对数据库的操作都是建立在字典操作之上的。</li>
+<li>数据库的键总是一个字符串对象，而值则可以是任意一种Redis对象类型，包括字符串对象、哈希表对象、集合对象、列表对象和有序集合对象，分别对应字符串键、哈希表键、集合键、列表键和有序集合键。</li>
+<li><code>expires</code>字典的键指向数据库中的某个键，而值则记录了数据库键的过期时间，过期时间是一个以毫秒为单位的UNIX时间戳。</li>
+<li>Redis使用惰性删除和定期删除两种策略来删除过期的键：惰性删除策略只在碰到过期键时才进行删除操作，定期删除策略则每隔一段时间主动查找并删除过期键。</li>
+<li>执行<code>SAVE</code>命令或者<code>BGSAVE</code>命令所产生的新RDB文件不会包含已经过期的键。</li>
+<li>执行<code>BGREWRITEAOF</code>命令所产生的重写AOF文件不会包含已经过期的键。</li>
+<li>当一个过期键被删除之后，服务器会追加一条<code>DEL</code>命令到现有的AOF文件的末尾，显式地删除过期键。</li>
+<li>当主服务器删除一个过期键之后，它会向所有从服务器发送一条<code>DEL</code>命令，显式地删除过期键。</li>
+<li>从服务器即使发现过期键也不会自作主张地删除它，而是等待主节点发来<code>DEL</code>命令，这种统一、中心化的过期键删除策略可以保证主从服务器数据的一致性。</li>
+<li>当Redis命令对数据库进行修改之后，服务器会根据配置向客户端发送数据库通知。</li>
+</ul>
+<h4 id="2rdb持久化">2、RDB持久化 <a class="heading-anchor" href="#2rdb%e6%8c%81%e4%b9%85%e5%8c%96" aria-label="">#</a></h4>
+<ul>
+<li>RDB文件用于保存和还原Redis服务器所有数据库中的所有键值对数据。</li>
+<li><code>SAVE</code>命令由服务器进程直接执行保存操作，所以该命令会阻塞服务器。</li>
+<li><code>BGSAVE</code>命令由子进程执行保存操作，所以该命令不会阻塞服务器。</li>
+<li>服务器状态中会保存所有用<code>save</code>选项设置的保存条件，当任意一个保存条件被满足时，服务器会自动执行<code>BGSAVE</code>命令。</li>
+<li>RDB文件是一个经过压缩的二进制文件，由多个部分组成。</li>
+<li>对于不同类型的键值对，RDB文件会使用不同的方式来保存它们。</li>
+</ul>
+<h4 id="3aof持久化">3、AOF持久化 <a class="heading-anchor" href="#3aof%e6%8c%81%e4%b9%85%e5%8c%96" aria-label="">#</a></h4>
+<ul>
+<li>AOF文件通过保存所有修改数据库的写命令请求来记录服务器的数据库状态。</li>
+<li>AOF文件中的所有命令都以Redis命令请求协议的格式保存。</li>
+<li>命令请求会先保存到AOF缓冲区里面，之后再定期写入并同步到AOF文件。</li>
+<li><code>appendfsync</code>选项的不同值对AOF持久化功能的安全性以及Redis服务器的性能有很大的影响。</li>
+<li>服务器只要载入并重新执行保存再AOF文件中的命令，就可以还原数据库本来的状态。</li>
+<li>AOF重写可以产生一个新的AOF文件，这个新的AOF文件和原有的AOF文件所保存的数据库状态一样，但体积更小。</li>
+<li>AOF重写是一个有歧义的名字，该功能是通过读取数据库中的键值对来实现的，程序无须对现有的AOF文件进行任何读入、分析或者写入操作。</li>
+<li>在执行<code>BGREWRITEAOF</code>命令时，Redis服务器会维护一个AOF重写缓冲区，该缓冲区会在子进程创建新AOF文件期间，记录服务器执行的所有写命令。当子进程完成创建新AOF文件的工作之后，服务器会将重写缓冲区中的所有内容追加到新AOF文件的末尾，使得新旧两个AOF文件所保存的数据库状态一致。最后，服务器用新的AOF文件替换旧的AOF文件，以此来完成AOF文件重写操作。</li>
+</ul>
+<h4 id="4事件">4、事件 <a class="heading-anchor" href="#4%e4%ba%8b%e4%bb%b6" aria-label="">#</a></h4>
+<ul>
+<li>Redis服务器是一个事件驱动程序，服务器处理的事件分为时间事件和文件事件两类。</li>
+<li>文件事件处理器是基于Reactor模式实现的网络通信程序。</li>
+<li>文件事件是对套接字操作的抽象：每次套接字变为可应答（acceptable）、可写（writable）或者可读（readable）时，相应的文件事件就会产生。</li>
+<li>文件事件分为<code>AE_READABLE</code>事件（读事件）和<code>AE_WRITABLE</code>事件（写事件）两类。</li>
+<li>时间事件分为定时事件和周期性事件：定时事件只在指定的时间到达一次，而周期性事件则每隔一段事件到达一次。</li>
+<li>服务器在一般情况下只执行<code>serverCron</code>函数一个时间事件，并且这个事件是周期性事件。</li>
+<li>文件事件和时间事件之间是合作关系，服务器会轮流处理这两种事件，并且处理事件的过程中也不会进行抢占。</li>
+<li>时间事件的实际处理时间通常会比设定的到达时间晚一些。</li>
+</ul>
+<h4 id="5客户端">5、客户端 <a class="heading-anchor" href="#5%e5%ae%a2%e6%88%b7%e7%ab%af" aria-label="">#</a></h4>
+<ul>
+<li>服务器状态结构使用<code>clients</code>链表连接起多个客户端状态，新添加的客户端状态会被放到链表的末尾。</li>
+<li>客户端状态的<code>flags</code>属性使用不同标志来表示客户端的角色，以及客户端当前所处的状态。</li>
+<li>输入缓冲区记录了客户端发送的命令请求，这个缓冲区的大小不能超过1GB。</li>
+<li>命令的参数和参数个数会被记录在客户端状态的<code>argv</code>和<code>argc</code>属性里面，而<code>cmd</code>属性则记录了客户端要执行命令的实现函数。</li>
+<li>客户端有固定大小缓冲区和可变大小缓冲区两种缓冲区可用，其中固定大小缓冲区的最大大小为16KB，而可变大小缓冲区的最大大小不能超过服务器设置的硬性限制值。</li>
+<li>输出缓冲区限制值有两种，如果输出缓冲区的大小超过了服务器设置的硬性限制，那么客户端会被立即关闭；除此之外，如果客户端在一定时间内，一直超过服务器设置的软性限制，那么客户端也会被关闭。</li>
+<li>当一个客户端通过网络连接连上服务器时，服务器会为这个客户端创建相应的客户端状态。网络连接关闭、发送了不合协议格式的命令请求、成为<code>CLIENT KILL</code>命令的目标、空转时间超时、输出缓冲区的大小超出限制，以上这些原因都会造成客户端被关闭。</li>
+<li>处理Lua脚本的伪客户端在服务器初始化时创建，这个客户端会一直存在，直到服务器关闭。</li>
+<li>载入AOF文件时使用的伪客户端在载入工作开始时动态创建，载入工作完毕之后关闭。</li>
+</ul>
+<h4 id="6服务器">6、服务器 <a class="heading-anchor" href="#6%e6%9c%8d%e5%8a%a1%e5%99%a8" aria-label="">#</a></h4>
+<ul>
+<li>一个命令请求从发送到完成主要包括以下步骤：1）客户端将命令请求发送给服务器；2）服务器读取命令请求，并分析出命令参数；3）命令执行器根据参数查找命令的实现函数，然后执行实现函数并得出命令回复；4）服务器将命令回复返回给客户端。</li>
+<li><code>serverCron</code>函数默认每隔100毫秒执行一次，它的工作主要包括更新服务器状态信息，处理服务器接收的<code>SIGTERM</code>信号。管理客户端资源和数据库状态，检查并执行持久化操作等等。</li>
+<li>服务器从启动到能够处理客户端的命令请求需要执行以下步骤：1）初始化服务器状态；2）载入服务器配置；3）初始化服务器数据结构；4）还原数据库状态；5）执行事件循环。</li>
+</ul>
+<h3 id="三多机数据库的实现">三、多机数据库的实现 <a class="heading-anchor" href="#%e4%b8%89%e5%a4%9a%e6%9c%ba%e6%95%b0%e6%8d%ae%e5%ba%93%e7%9a%84%e5%ae%9e%e7%8e%b0" aria-label="">#</a></h3>
+<h4 id="1复制">1、复制 <a class="heading-anchor" href="#1%e5%a4%8d%e5%88%b6" aria-label="">#</a></h4>
+<ul>
+<li>Redis 2.8以前的复制功能不能高效地处理断线后重复制情况，但Redis 2.8新添加的部分重同步功能可以解决这个问题。</li>
+<li>部分重同步通过复制偏移量、复制积压缓冲区、服务器运行ID三个部分来实现。</li>
+<li>在复制操作刚开始的时候，从服务器会成为主服务器的客户端，并通过向主服务器发送命令请求来执行复制步骤，而在复制操作的后期，主从服务器会相互成为对方的客户端。</li>
+<li>主服务器通过向从服务器传播命令来更新从服务器的状态，保持主从服务器一致，而从服务器则通过向主服务器发送命令来进行心跳检测，以及命令丢失检测。</li>
+</ul>
+<h4 id="2sentinel">2、Sentinel <a class="heading-anchor" href="#2sentinel" aria-label="">#</a></h4>
+<ul>
+<li>Sentinel只是一个运行在特殊模式下的Redis服务器，它使用了和普通模式不同的命令表，所以Sentinel模式能够使用的命令和普通Redis服务器能够使用的命令不同。</li>
+<li>Sentinel会读入用户指定的配置文件，为每个要被监视的主服务器创建相应的实例结构，并创建连向主服务器的命令连接和订阅连接，其中命令连接用于向主服务器发送命令请求，而订阅连接则用于接收指定频道的详细。</li>
+<li>Sentinel通过向主服务器发送<code>INFO</code>命令来获得主服务器属下所有从服务器的地址信息，并为这些从服务器创建相应的实例结构，以及连向这些从服务器的命令连接和订阅连接。</li>
+<li>在一般情况下，Sentinel以每十秒一次的频率向被监视的主服务器和从服务器发送<code>INFO</code>命令，当主服务器处于下线状态，或者Sentinel正在对主服务器进行故障转移操作时，Sentinel向从服务器发送<code>INFO</code>命令的频率会改为每秒一次。</li>
+<li>对于监视同一个主服务器和从服务器的多个Sentinel来说，它们会以每两秒一次的频率，通过向被监视服务器的<code>__sentinel__:hello</code>频道发送消息来向其他Sentinel宣告自己的存在。</li>
+<li>每个Sentinel也会从<code>__sentinel__:hello</code>频道中接收其他Sentinel发来的消息，并根据这些信息为其他Sentinel创建相应的实例结构，以及命令连接。</li>
+<li>Sentinel只会与主服务器和从服务器创建命令连接和订阅连接，Sentinel与Sentinel之间则只创建命令连接。</li>
+<li>Sentinel以每秒一次的频率向实例（包括主服务器、从服务器、其他Sentinel）发送<code>PING</code>命令，并根据实例对<code>PING</code>命令的回复来判断实例是否在线，当一个实例在指定的时长中连续向Sentinel发送无效回复时，Sentinel会将这个实例判断为主观下线。</li>
+<li>当Sentinel将一个主服务器判断为主观下线时，它会向同样监视这个主服务器的其他Sentinel进行询问，看它们是否同意这个主服务器已经进入主观下线状态。</li>
+<li>当Sentinel收集到足够多的主观下线投票之后，它会将主服务器判断为客观下线，并发起一次针对主服务器的故障转移操作。</li>
+</ul>
+<h4 id="3集群">3、集群 <a class="heading-anchor" href="#3%e9%9b%86%e7%be%a4" aria-label="">#</a></h4>
+<ul>
+<li>节点通过握手来将其他节点添加到自己所处的集群当中。</li>
+<li>集群中的16348个槽可以分别指派给集群中的各个节点，每个节点都会记录哪些槽指派给了自己，而哪些槽又被指派给了其他节点。</li>
+<li>节点在接到一个命令请求时，会先检查这个命令请求要处理的键所在的槽是否由自己负责，如果不是的话，节点将向客户端返回一个<code>MOVED</code>错误，<code>MOVED</code>错误携带的信息可以指引客户端转向至正在负责相关槽的节点。</li>
+<li>对Redis集群的重新分片工作是由<code>redis-trib</code>负责执行的，重新分片的关键是将属于某个槽的所有键值对从一个节点转移至另一个节点。</li>
+<li>如果节点A正在迁移槽i至节点B，那么当节点A没能在自己的数据库中找到命令指定的数据库键时，节点A会向客户端返回一个<code>ASK</code>错误，指引客户端到节点B继续查找指定的数据库键。</li>
+<li><code>MOVED</code>错误表示槽的负责权已经从一个节点转移到了另一个节点，而<code>ASK</code>错误只是两个节点在迁移槽的过程中使用的一种临时措施。</li>
+<li>集群里的从节点用于复制主节点，并在主节点下线时，代替主节点继续处理命令请求。</li>
+<li>集群中的节点通过发送和接收消息来进行通信，常见的消息包括<code>MEET</code>、<code>PING</code>、<code>PONG</code>、<code>PUBLISH</code>、<code>FAIL</code>五种。</li>
+</ul>
+<h3 id="四独立功能的实现">四、独立功能的实现 <a class="heading-anchor" href="#%e5%9b%9b%e7%8b%ac%e7%ab%8b%e5%8a%9f%e8%83%bd%e7%9a%84%e5%ae%9e%e7%8e%b0" aria-label="">#</a></h3>
+<h4 id="1发布与订阅">1、发布与订阅 <a class="heading-anchor" href="#1%e5%8f%91%e5%b8%83%e4%b8%8e%e8%ae%a2%e9%98%85" aria-label="">#</a></h4>
+<ul>
+<li>服务器状态在<code>pubsub_channels</code>字典保存了所有频道的订阅关系：<code>SUBSCRIBE</code>命令负责将客户端和被订阅的频道关联到这个字典里面，而<code>UNSUBSCRIBE</code>命令则负责解除客户端和被退订频道之间的关联。</li>
+<li>服务器状态在<code>pubsub_patterns</code>链表保存了所有模式的订阅关系：<code>PSUBSCRIBE</code>命令负责将客户端和被订阅的模式记录到这个链表中，而<code>PUNSUBSCRIBE</code>命令则负责移除客户端和被退订模式在链表中的记录。</li>
+<li><code>PUBLISH</code>命令通过访问<code>pubsub_channels</code>字典来向频道的所有订阅者发送消息，通过访问<code>pubsub_patterns</code>链表来向所有匹配频道的模式的订阅者发送消息。</li>
+<li><code>PUBSUB</code>命令的三个子命令都是通过读取<code>pubsub_channels</code>字典和<code>pubsub_patterns</code>链表中的信息来实现的。</li>
+</ul>
+<h4 id="2事务">2、事务 <a class="heading-anchor" href="#2%e4%ba%8b%e5%8a%a1" aria-label="">#</a></h4>
+<ul>
+<li>事务提供了一种将多个命令打包，然后一次性、有序地执行的机制。</li>
+<li>多个命令会被入队列到事务队列中，然后按先进先出（FIFO）的顺序执行。</li>
+<li>事务在执行过程中不会被中断，当事务队列中的所有命令都被执行完毕之后，事务才会结束。</li>
+<li>带有<code>WATCH</code>命令的事务会将客户端和被监视的键在数据库的<code>watched_keys</code>字典中进行关联，当键被修改时，程序会将所有监视被修改键的客户端的<code>REDIS_DIRTY_CAS</code>标志打开。</li>
+<li>只有在客户端的<code>REDIS_DIRTY_CAS</code>标志未被打开时，服务器才会执行客户端提交的事务，否则的话，服务器将拒绝执行客户端提交的事务。</li>
+<li>Redis的事务总是具有ACID中的原子性、一致性和隔离性，当服务器运行在AOF持久化模式下，并且<code>appendfsync</code>选项的值为<code>always</code>时，事务也具有耐久性。</li>
+</ul>
+<h4 id="3lua脚本">3、Lua脚本 <a class="heading-anchor" href="#3lua%e8%84%9a%e6%9c%ac" aria-label="">#</a></h4>
+<ul>
+<li>Redis服务器在启动时，会对内嵌的Lua环境执行一系列修改操作，从而确保内嵌的Lua环境可以满足Redis在功能性、安全性等方面的需要。</li>
+<li>Redis服务器专门使用一个伪客户端来执行Lua脚本中包含的Redis命令。</li>
+<li>Redis使用脚本字典来保存所有被<code>EVAL</code>命令执行过，或者被<code>SCRIPT LOAD</code>命令载入过的Lua脚本，这些脚本可以用于实现<code>SCRIPT EXISTS</code>命令，以及实现脚本复制功能。</li>
+<li><code>EVAL</code>命令为客户端输入的脚本在Lua环境中定义一个函数，并通过调用这个函数来执行脚本。</li>
+<li><code>EVALSHA</code>命令通过直接调用Lua环境中已定义的函数来执行脚本。</li>
+<li><code>SCRIPT FLUSH</code>命令会清空服务器<code>lua_scripts</code>字典中保存的脚本，并重置Lua环境。</li>
+<li><code>SCRIPT EXISTS</code>命令接受一个或多个SHA1校验和为参数，并通过检查<code>lua_scripts</code>字典来确认校验和对应的脚本是否存在。</li>
+<li><code>SCRIPT LOAD</code>命令接受一个Lua脚本为参数，为该脚本在Lua环境中创建函数，并将脚本保存到<code>lua_scripts</code>字典中。</li>
+<li>服务器在执行脚本之前，会为Lua环境设置一个超时处理钩子，当脚本出现超时运行情况时，客户端可以通过向服务器发送<code>SCRIPT KILL</code>命令来让钩子停止正在执行的脚本，或者发送<code>SHUTDOWN nosave</code>命令来让钩子关闭整个服务器。</li>
+<li>主服务器复制<code>EVAL</code>、<code>SCRIPT FLUSH</code>、<code>SCRIPT LOAD</code>三个命令的方法和复制普通Redis命令一样，只要将相同的命令传播给从服务器就可以了。</li>
+<li>主服务器在复制<code>EVALSHA</code>命令时，必须确保所有从服务器都已经载入了<code>EVALSHA</code>命令指定的SHA1校验和所对应的Lua脚本，如果不能确保这一点的话，主服务器会将<code>EVALSHA</code>命令转换成等效的<code>EVAL</code>命令，并通过传播<code>EVAL</code>命令来获得相同的脚本执行效果。</li>
+</ul>
+<h4 id="4排序">4、排序 <a class="heading-anchor" href="#4%e6%8e%92%e5%ba%8f" aria-label="">#</a></h4>
+<ul>
+<li><code>SORT</code>命令通过将被排序键包含的元素载入到数组里面，然后对数组进行排序来完成对键进行排序的工作。</li>
+<li>在默认情况下，<code>SORT</code>命令假设被排序键包含的都是数字值，并且以数字值的方式来进行排序。</li>
+<li>如果<code>SORT</code>命令使用了<code>ALPHA</code>选项，那么<code>SORT</code>命令假设被排序键包含的都是字符串值，并且以字符串的方式来进行排序。</li>
+<li><code>SORT</code>命令的排序操作由快速排序算法实现。</li>
+<li><code>SORT</code>命令会根据用户是否使用了<code>DESC</code>选项来决定是使用升序对比还是降序对比来比较被排序的元素，升序对比会产生升序排序结果，被排序的元素值的大小从小到大排列，降序对比会产生降序排序结果，被排序的元素按值的大小从大到小排列。</li>
+<li>当<code>SORT</code>命令使用了<code>BY</code>选项时，命令使用其他键的值作为权重来进行排序操作。</li>
+<li>当<code>SORT</code>命令使用了<code>LIMIT</code>选项时，命令只保留排序结果集中<code>LIMIT</code>选项指定的元素。</li>
+<li>当<code>SORT</code>命令使用了<code>GET</code>选项时，命令会根据排序结果集中的元素，以及<code>GET</code>选项给定的模式，查找并返回其他键的值，而不是返回被排序的元素。</li>
+<li>当<code>SORT</code>命令使用了<code>STORE</code>选项时，命令会将排序结果集保存在指定的键里面。</li>
+<li>当<code>SORT</code>命令同时使用多个选项时，命令先执行排序操作（可用的选项为<code>ALPHA</code>、<code>ASC</code>或<code>DESC</code>、<code>BY</code>），然后执行<code>LIMIT</code>选项，之后执行<code>GET</code>选项，再之后执行<code>STORE</code>选项，最后才将排序结果集返回给客户端。</li>
+<li>除了<code>GET</code>选项之外，调整选项的排放位置不会影响<code>SORT</code>命令的排序结果。</li>
+</ul>
+<h4 id="5二进制位数组">5、二进制位数组 <a class="heading-anchor" href="#5%e4%ba%8c%e8%bf%9b%e5%88%b6%e4%bd%8d%e6%95%b0%e7%bb%84" aria-label="">#</a></h4>
+<ul>
+<li>Redis使用<code>SDS</code>来保存位数组。</li>
+<li><code>SDS</code>使用逆序来保存数组，这种保存顺序简化了<code>SETBIT</code>命令的实现，使得<code>SETBIT</code>命令可以在不移动现有二进制位的情况下，对位数组进行空间扩展。</li>
+<li><code>BITCOUNT</code>命令使用了查表算法和<code>variable-precision SWAR</code>算法来优化命令的执行效率。</li>
+<li><code>BITOP</code>命令的所有操作都使用C语言内置的位操作来实现。</li>
+</ul>
+<h4 id="6慢查询日志">6、慢查询日志 <a class="heading-anchor" href="#6%e6%85%a2%e6%9f%a5%e8%af%a2%e6%97%a5%e5%bf%97" aria-label="">#</a></h4>
+<ul>
+<li>Redis的慢查询日志功能用于记录执行时间超过指定时长的命令。</li>
+<li>Redis服务器将所有的慢查询日志保存在服务器状态的<code>slowlog</code>链表中，每个链表节点都包含一个<code>slowlogEntry</code>结构，每个<code>slowlogEntry</code>结构代表一条慢查询日志。</li>
+<li>打印和删除慢查询日志可以通过遍历<code>slowlog</code>链表来完成。</li>
+<li><code>slowlog</code>链表的长度就是服务器所保存慢查询日志的数量。</li>
+<li>新的慢查询日志会被添加到<code>slowlog</code>链表的表头，如果日志的数量超过<code>slowlog-max-len</code>选项的值，那么多出来的日志会被删除。</li>
+</ul>
+<h4 id="7监视器">7、监视器 <a class="heading-anchor" href="#7%e7%9b%91%e8%a7%86%e5%99%a8" aria-label="">#</a></h4>
+<ul>
+<li>客户端可以通过执行<code>MONITOR</code>命令，将客户端转换成监视器，接收并打印服务器处理的每个命令请求的相关信息。</li>
+<li>当一个客户端从普通客户端变为监视器时，该客户端的<code>REDIS_MONITOR</code>标识会被打开。</li>
+<li>服务器将所有监视器都记录在<code>monitors</code>链表中。</li>
+<li>每次处理命令请求时，服务器都会遍历<code>monitors</code>链表，将相关信息发送给监视器。</li>
+</ul>
+    </section>
+    <footer class="pt-8">
+      
+  <div class="flex">
+    
+      <img class="w-24 h-24 !mt-0 !mb-0 mr-4 rounded-full" src="/author.jpg" />
+    
+    <div class="place-self-center">
+      
+        <div class="text-[0.6rem] leading-3 text-neutral-400 dark:text-neutral-500 uppercase">
+          
+        </div>
+        <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+          Kai
+        </div>
+      
+      
+        <div class="text-sm text-neutral-700 dark:text-neutral-400">幸福就像香水，洒给别人也一定会感染自己</div>
+      
+      
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500">
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="mailto:kaikai87111@gmail.com"
+          target="_blank"
+          alt="Email"
+          rel="me noopener noreferrer"
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="at" class="svg-inline--fa fa-at fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C118.941 8 8 118.919 8 256c0 137.059 110.919 248 248 248 48.154 0 95.342-14.14 135.408-40.223 12.005-7.815 14.625-24.288 5.552-35.372l-10.177-12.433c-7.671-9.371-21.179-11.667-31.373-5.129C325.92 429.757 291.314 440 256 440c-101.458 0-184-82.542-184-184S154.542 72 256 72c100.139 0 184 57.619 184 160 0 38.786-21.093 79.742-58.17 83.693-17.349-.454-16.91-12.857-13.476-30.024l23.433-121.11C394.653 149.75 383.308 136 368.225 136h-44.981a13.518 13.518 0 0 0-13.432 11.993l-.01.092c-14.697-17.901-40.448-21.775-59.971-21.775-74.58 0-137.831 62.234-137.831 151.46 0 65.303 36.785 105.87 96 105.87 26.984 0 57.369-15.637 74.991-38.333 9.522 34.104 40.613 34.103 70.71 34.103C462.609 379.41 504 307.798 504 232 504 95.653 394.023 8 256 8zm-21.68 304.43c-22.249 0-36.07-15.623-36.07-40.771 0-44.993 30.779-72.729 58.63-72.729 22.292 0 35.601 15.241 35.601 40.77 0 45.061-33.875 72.73-58.161 72.73z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://github.com/iakud"
+          target="_blank"
+          alt="Github"
+          rel="me noopener noreferrer"
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" class="svg-inline--fa fa-github fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+  </div>
+
+
+    </div>
+  </div>
+
+
+      
+  
+  <section class="flex flex-row flex-wrap justify-center pt-4 text-xl">
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://www.facebook.com/sharer/sharer.php?u=https://blog.iakud.com/posts/thedesignandimplementationofredis/&amp;quote=%e3%80%8aRedis%e8%ae%be%e8%ae%a1%e4%b8%8e%e5%ae%9e%e7%8e%b0%e3%80%8b%e9%87%8d%e7%82%b9%e5%9b%9e%e9%a1%be"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook" class="svg-inline--fa fa-facebook fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://twitter.com/intent/tweet/?url=https://blog.iakud.com/posts/thedesignandimplementationofredis/&amp;text=%e3%80%8aRedis%e8%ae%be%e8%ae%a1%e4%b8%8e%e5%ae%9e%e7%8e%b0%e3%80%8b%e9%87%8d%e7%82%b9%e5%9b%9e%e9%a1%be"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" class="svg-inline--fa fa-twitter fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.iakud.com/posts/thedesignandimplementationofredis/&amp;description=%e3%80%8aRedis%e8%ae%be%e8%ae%a1%e4%b8%8e%e5%ae%9e%e7%8e%b0%e3%80%8b%e9%87%8d%e7%82%b9%e5%9b%9e%e9%a1%be"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="pinterest" class="svg-inline--fa fa-pinterest fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M496 256c0 137-111 248-248 248-25.6 0-50.2-3.9-73.4-11.1 10.1-16.5 25.2-43.5 30.8-65 3-11.6 15.4-59 15.4-59 8.1 15.4 31.7 28.5 56.8 28.5 74.8 0 128.7-68.8 128.7-154.3 0-81.9-66.9-143.2-152.9-143.2-107 0-163.9 71.8-163.9 150.1 0 36.4 19.4 81.7 50.3 96.1 4.7 2.2 7.2 1.2 8.3-3.3.8-3.4 5-20.3 6.9-28.1.6-2.5.3-4.7-1.7-7.1-10.1-12.5-18.3-35.3-18.3-56.6 0-54.7 41.4-107.6 112-107.6 60.9 0 103.6 41.5 103.6 100.9 0 67.1-33.9 113.6-78 113.6-24.3 0-42.6-20.1-36.7-44.8 7-29.5 20.5-61.3 20.5-82.6 0-19-10.2-34.9-31.4-34.9-24.9 0-44.9 25.7-44.9 60.2 0 22 7.4 36.8 7.4 36.8s-24.5 103.8-29 123.2c-5 21.4-3 51.6-.9 71.2C65.4 450.9 0 361.1 0 256 0 119 111 8 248 8s248 111 248 248z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://reddit.com/submit/?url=https://blog.iakud.com/posts/thedesignandimplementationofredis/&amp;resubmit=true&amp;title=%e3%80%8aRedis%e8%ae%be%e8%ae%a1%e4%b8%8e%e5%ae%9e%e7%8e%b0%e3%80%8b%e9%87%8d%e7%82%b9%e5%9b%9e%e9%a1%be"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="reddit" class="svg-inline--fa fa-reddit fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M201.5 305.5c-13.8 0-24.9-11.1-24.9-24.6 0-13.8 11.1-24.9 24.9-24.9 13.6 0 24.6 11.1 24.6 24.9 0 13.6-11.1 24.6-24.6 24.6zM504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-132.3-41.2c-9.4 0-17.7 3.9-23.8 10-22.4-15.5-52.6-25.5-86.1-26.6l17.4-78.3 55.4 12.5c0 13.6 11.1 24.6 24.6 24.6 13.8 0 24.9-11.3 24.9-24.9s-11.1-24.9-24.9-24.9c-9.7 0-18 5.8-22.1 13.8l-61.2-13.6c-3-.8-6.1 1.4-6.9 4.4l-19.1 86.4c-33.2 1.4-63.1 11.3-85.5 26.8-6.1-6.4-14.7-10.2-24.1-10.2-34.9 0-46.3 46.9-14.4 62.8-1.1 5-1.7 10.2-1.7 15.5 0 52.6 59.2 95.2 132 95.2 73.1 0 132.3-42.6 132.3-95.2 0-5.3-.6-10.8-1.9-15.8 31.3-16 19.8-62.5-14.9-62.5zM302.8 331c-18.2 18.2-76.1 17.9-93.6 0-2.2-2.2-6.1-2.2-8.3 0-2.5 2.5-2.5 6.4 0 8.6 22.8 22.8 87.3 22.8 110.2 0 2.5-2.2 2.5-6.1 0-8.6-2.2-2.2-6.1-2.2-8.3 0zm7.7-75c-13.6 0-24.6 11.1-24.6 24.9 0 13.6 11.1 24.6 24.6 24.6 13.8 0 24.9-11.1 24.9-24.6 0-13.8-11-24.9-24.9-24.9z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://blog.iakud.com/posts/thedesignandimplementationofredis/&amp;title=%e3%80%8aRedis%e8%ae%be%e8%ae%a1%e4%b8%8e%e5%ae%9e%e7%8e%b0%e3%80%8b%e9%87%8d%e7%82%b9%e5%9b%9e%e9%a1%be"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="linkedin" class="svg-inline--fa fa-linkedin fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+      
+        <a
+          class="bg-neutral-300 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800 m-1 hover:bg-primary-500 hover:text-neutral rounded min-w-[2.4rem] inline-block text-center p-1"
+          href="mailto:?body=https://blog.iakud.com/posts/thedesignandimplementationofredis/&amp;subject=%e3%80%8aRedis%e8%ae%be%e8%ae%a1%e4%b8%8e%e5%ae%9e%e7%8e%b0%e3%80%8b%e9%87%8d%e7%82%b9%e5%9b%9e%e9%a1%be"
+          title=""
+          >
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="at" class="svg-inline--fa fa-at fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C118.941 8 8 118.919 8 256c0 137.059 110.919 248 248 248 48.154 0 95.342-14.14 135.408-40.223 12.005-7.815 14.625-24.288 5.552-35.372l-10.177-12.433c-7.671-9.371-21.179-11.667-31.373-5.129C325.92 429.757 291.314 440 256 440c-101.458 0-184-82.542-184-184S154.542 72 256 72c100.139 0 184 57.619 184 160 0 38.786-21.093 79.742-58.17 83.693-17.349-.454-16.91-12.857-13.476-30.024l23.433-121.11C394.653 149.75 383.308 136 368.225 136h-44.981a13.518 13.518 0 0 0-13.432 11.993l-.01.092c-14.697-17.901-40.448-21.775-59.971-21.775-74.58 0-137.831 62.234-137.831 151.46 0 65.303 36.785 105.87 96 105.87 26.984 0 57.369-15.637 74.991-38.333 9.522 34.104 40.613 34.103 70.71 34.103C462.609 379.41 504 307.798 504 232 504 95.653 394.023 8 256 8zm-21.68 304.43c-22.249 0-36.07-15.623-36.07-40.771 0-44.993 30.779-72.729 58.63-72.729 22.292 0 35.601 15.241 35.601 40.77 0 45.061-33.875 72.73-58.161 72.73z"></path></svg>
+  </span>
+
+</a
+        >
+      
+    
+  </section>
+
+
+      
+  
+    <div class="pt-8 article-pagination">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600" />
+      <div class="flex justify-between pt-3">
+        <span>
+          
+            <a class="flex" href="/posts/etcduser/">
+              <span class="mr-3 article-pagination-direction">&larr;</span>
+              <span class="flex flex-col">
+                <span class="article-pagination-title mt-[0.1rem] leading-6"
+                  >Etcd用户和权限设置</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-400 dark:text-neutral-500">
+                  
+                    <time datetime="2021-01-29 16:08:07 &#43;0000 UTC">29 January 2021</time>
+                  
+                </span>
+              </span>
+            </a>
+          
+        </span>
+        <span>
+          
+            <a class="flex text-right" href="/posts/gomodules/">
+              <span class="flex flex-col">
+                <span class="article-pagination-title mt-[0.1rem] leading-6"
+                  >Go Modules</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-400 dark:text-neutral-500">
+                  
+                    <time datetime="2019-12-04 10:59:04 &#43;0000 UTC">4 December 2019</time>
+                  
+                </span>
+              </span>
+              <span class="ml-3 article-pagination-direction">&rarr;</span>
+            </a>
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+    </footer>
+    
+  </article>
+</main><footer class="py-10">
+  
+  
+  <div class="flex justify-between">
+    <div>
+      
+      <p class="text-sm text-neutral-400 dark:text-neutral-500">
+          &copy;
+          2021
+          Kai
+      </p>
+      
+      
+        <p class="text-xs text-neutral-300 dark:text-neutral-600">
+          
+          
+          
+        </p>
+      
+    </div>
+    
+    
+      <div class="text-sm cursor-pointer text-neutral-400 dark:text-neutral-500">
+        <button
+          id="dark-toggle"
+          onclick="setPreferredAppearance('dark');"
+          oncontextmenu="setPreferredAppearance('default'); return false;"
+          class="inline px-2 py-1 border rounded-md border-neutral-200 dark:hidden hover:text-primary-500 hover:border-primary-400"
+          title=""
+        >
+          
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="moon" class="svg-inline--fa fa-moon fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792 7.068-8.708-.639-21.43-11.562-19.35-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394 9.686-5.512 7.25-20.197-3.756-22.23A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"></path></svg>
+  </span>
+
+
+        </button>
+        <button
+          id="light-toggle"
+          onclick="setPreferredAppearance('light');"
+          oncontextmenu="setPreferredAppearance('default'); return false;"
+          class="hidden px-2 py-1 border rounded-md cursor-pointer dark:inline border-neutral-700 hover:text-primary-400 hover:border-primary-500"
+          title=""
+        >
+          
+
+  <span class="relative inline-block align-text-bottom icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sun" class="svg-inline--fa fa-sun fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"></path></svg>
+  </span>
+
+
+        </button>
+      </div>
+    
+  </div>
+  
+  
+</footer>
+</body>
+</html>
